@@ -1,0 +1,60 @@
+<android.support.v7.widget.CardView
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    card_view:cardCornerRadius="4dp"
+    android:layout_margin="5dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/logotipo"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="16dp"
+            android:layout_width="60dp"
+            android:layout_height="80dp"
+            />
+
+        <TextView
+            android:id="@+id/nombre_negocio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:gravity="top"
+            android:textSize="10dp"
+            android:layout_toRightOf="@id/logotipo"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="5dp"/>
+
+        <TextView
+            android:id="@+id/direccion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Surname"
+            android:gravity="center_vertical"
+            android:textSize="10dp"
+            android:layout_below="@id/nombre_negocio"
+            android:layout_toRightOf="@id/logotipo"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="5dp"/>
+
+        <TextView
+            android:id="@+id/coordenadas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Email"
+            android:textSize="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="150dp"
+            android:layout_toRightOf="@id/logotipo"
+            android:layout_below="@id/direccion"
+            android:gravity="bottom"/>
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>

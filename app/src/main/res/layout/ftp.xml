@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:layout_below="@+id/edtNombreNegocio"
+    android:id="@+id/imageUpload">
+
+    <TextView
+        android:id="@+id/infoText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Image to upload"
+        android:layout_below="@+id/edtNombreNegocio"
+        android:textSize="30dp"/>
+    <ImageView
+        android:layout_height="300dp"
+        android:layout_width="300dp"
+        android:src="@drawable/vochito"
+        android:id="@+id/image_ftp"
+        android:layout_below="@+id/infoText"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_choose_image"
+        android:text="Choose an image"
+        android:layout_below="@+id/image_ftp"/>
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Upload picture"
+        android:layout_below="@+id/image_ftp"
+        android:layout_toRightOf="@+id/btn_choose_image"/>
+
+</RelativeLayout>
