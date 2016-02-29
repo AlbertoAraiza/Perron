@@ -1,6 +1,8 @@
 package admin.mx.com.perron.logic;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.TextView;
@@ -13,11 +15,20 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import org.apache.commons.codec.binary.Base64;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
+
+import admin.mx.com.perron.R;
 import admin.mx.com.perron.activities.MenuMain;
 import admin.mx.com.perron.entities.Negocios;
+import admin.mx.com.perron.entities.NegociosImage;
+import admin.mx.com.perron.entities.NegociosImage2;
 import admin.mx.com.perron.utils.Constants;
 import admin.mx.com.perron.utils.Utils;
 /**
@@ -70,7 +81,7 @@ public class ListaResultado extends AsyncTask {
         this.jsonObject = jsonObject;
     }
     public void executeRequestJson2(String data) throws Exception{
-        String url = "http://192.168.1.222:8080/publicidad/rest/v1/status/getNegocios";
+        String url = "http://192.168.1.222:8080/publicidad2/rest/v1/status/getNegocios";
         StringRequest stringReq = null;
         stringReq = new StringRequest(Request.Method.POST,
                 url, new Response.Listener<String>() {
@@ -108,14 +119,32 @@ public class ListaResultado extends AsyncTask {
         return json2;
     }
     public void getListaNegocios(String listaNegocio) {
-        Log.d(Constants.appName, "getListaNegocios(String listaNegocio) : "+listaNegocio);
         Gson gson = new Gson();
-        List<Negocios> listaNegocios = gson.fromJson(listaNegocio, new TypeToken<List<Negocios>>(){}.getType());
+        List<NegociosImage2> listaNegocios = gson.fromJson(listaNegocio, new TypeToken<List<NegociosImage2>>(){}.getType());
+
+        List<NegociosImage> listaTemporal = new ArrayList<NegociosImage>();
         for(int i=0;i<listaNegocios.size();i++){
-            Negocios neg = (Negocios)listaNegocios.get(i);
+            NegociosImage2 neg = (NegociosImage2)listaNegocios.get(i);
+
+            Bitmap bitmap = null;
+            try {
+
+                Log.d(Constants.appName, "neg.getLogotipo() : "+neg.getLogotipo());
+                bitmap = BitmapFactory.decodeByteArray(neg.getImage(), 0, neg.getImage().length);
+            } catch(Exception e){
+                e.printStackTrace();
+                bitmap = BitmapFactory.decodeResource(ctx.getResources(), R.mipmap.ic_launcher);
+            }
+            NegociosImage negociosImage;
+            negociosImage = new NegociosImage();
+            negociosImage.setCoordenadas(neg.getCoordenadas());
+            negociosImage.setDireccion(neg.getDireccion());
+            negociosImage.setIdNegocio(neg.getIdNegocio());
+            negociosImage.setLogotipo(bitmap);
+            negociosImage.setNombreNegocio(neg.getNombreNegocio());
+            listaTemporal.add(negociosImage);
             Log.d(Constants.appName, neg.toString());
         }
-        Log.d(Constants.appName, "Converting to JSonArray : "+listaNegocios);
-        ma.loadListNegocios(listaNegocios);
+        ma.loadListNegocios(listaTemporal);
     }
 }

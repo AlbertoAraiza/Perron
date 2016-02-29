@@ -1,38 +1,14 @@
 package admin.mx.com.perron.entities;
-import android.os.Parcel;
-import android.os.Parcelable;
 
-public class Negocios implements Parcelable {
+public class NegociosImage2 {
+    public NegociosImage2() {} // JAXB needs this
+
     private Long idNegocio;
     private String nombreNegocio;
     private String direccion;
     private String coordenadas;
     private String logotipo;
-
-
-    public Negocios() {
-
-    }
-
-    protected Negocios(Parcel in) {
-        nombreNegocio = in.readString();
-        direccion = in.readString();
-        coordenadas = in.readString();
-        logotipo = in.readString();
-    }
-
-    public static final Creator<Negocios> CREATOR = new Creator<Negocios>() {
-        @Override
-        public Negocios createFromParcel(Parcel in) {
-            return new Negocios(in);
-        }
-
-        @Override
-        public Negocios[] newArray(int size) {
-            return new Negocios[size];
-        }
-    };
-
+    private byte[] image;
     public String getCoordenadas() {
         return coordenadas;
     }
@@ -78,19 +54,12 @@ public class Negocios implements Parcelable {
         return "idNegocio: "+getIdNegocio()+", nombreNegocio: "+getNombreNegocio()+", direccion: "+getDireccion()+", coordenadas: "+getCoordenadas()+", logotipo"+getLogotipo();
     }
 
-
-
-
-    @Override
-    public int describeContents() {
-        return 0;
+    public byte[] getImage() {
+        return image;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(nombreNegocio);
-        dest.writeString(direccion);
-        dest.writeString(coordenadas);
-        dest.writeString(logotipo);
+    public void setImage(byte[] image) {
+        this.image = image;
     }
+
 }

@@ -1,8 +1,12 @@
 package admin.mx.com.perron;
+import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Environment;
 import android.util.Log;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -15,14 +19,20 @@ import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import admin.mx.com.perron.entities.Negocios;
+import admin.mx.com.perron.utils.CropSquareTransformation;
 import admin.mx.com.perron.utils.Utils;
 import it.sauronsoftware.ftp4j.FTPClient;
 import it.sauronsoftware.ftp4j.FTPDataTransferListener;
+
+import static android.graphics.Bitmap.CompressFormat.WEBP;
+
 /**
  * Created by Jorge on 04/nov/2015.
  */
@@ -36,8 +46,8 @@ class FtpCliente extends AsyncTask {
     public static final int MY_SOCKET_TIMEOUT_MS = 5000;
     RequestQueue queue = null;
     public FtpCliente(Context ctx, MainActivity ftpUpload, Bitmap bitmap, JSONObject jsonObject){
+    //public FtpCliente(Context ctx, MainActivity ftpUpload, Bitmap bitmap, JSONObject jsonObject){
         this.ctx = ctx;
-
         this.ftpUpload = ftpUpload;
         this.bitmap = bitmap;
         setJsonObject(jsonObject);
@@ -61,25 +71,32 @@ class FtpCliente extends AsyncTask {
         // TODO: check this.exception
         // TODO: do something with the feed
     }
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     public void uploadFile() throws Exception{
         //Utils.showMessage(ctx, app, "Caliz" );
         FTPClient client = null;
         //File fileName = new File("/storage/emulated/0/DCIM/Camera/IMG_20151031_165659.jpg");
+        /*ByteArrayOutputStream out = new ByteArrayOutputStream();
+
         File fileName = convertImage2File(bitmap);
         client = new FTPClient();
         client.connect(FTP_HOST, 21);
         client.login(FTP_USER, FTP_PASS);
         client.setType(FTPClient.TYPE_BINARY);
         client.changeDirectory(remoteDirectory);
-
-        client.upload(fileName, new MyTransferListener());
+        client.upload(fileName, new MyTransferListener());*/
     }
 
     @Override
     protected Object doInBackground(Object[] params) {
         //Utils.showMessage(ctx, app, "uploading file" );
         try {
-            uploadFile();
+            try {
+                executeRequestJson2("");
+            }catch (Exception e) {
+                MainActivity.getStackTrace(e);
+                e.printStackTrace();
+            }
         }catch (Exception e) {
             StringBuffer errorMsg = new StringBuffer(Utils.getStackTrace(e));
             Utils.setGlobalMessage(errorMsg);
@@ -101,12 +118,7 @@ class FtpCliente extends AsyncTask {
         super.onPostExecute(o);
         progressDialog.dismiss();
         //Utils.showMessage(ctx, app, "File uploaded successfully");
-        try {
-            executeRequestJson2("");
-        }catch (Exception e) {
-            MainActivity.getStackTrace(e);
-            e.printStackTrace();
-        }
+
     }
 
     /*******  Used to file upload and show progress  **********/
@@ -158,26 +170,31 @@ class FtpCliente extends AsyncTask {
         }
 
     }
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     public File convertImage2File(Bitmap image) throws IOException {
         //create a file to write bitmap data
-        String archivo = Utils.replaceBlank(null)+".png";
+        String archivo = Utils.replaceBlank(null)+".jpg";
+
+        CropSquareTransformation cop = new CropSquareTransformation();
+        Bitmap original = cop.transform(bitmap);
 
 
-        File f = new File(ctx.getCacheDir(), archivo);
+        File filename = new File(Environment.getExternalStorageDirectory()
+                + File.separator + archivo);
 
-        f.createNewFile();
+        filename.createNewFile();
 //Convert bitmap to byte array
-        Bitmap bitmap = image;
+
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 0 /*ignored for PNG*/, bos);
-        byte[] bitmapdata = bos.toByteArray();
+        original = Bitmap.createScaledBitmap(original, 2000, 2000, true);
+        original.compress(Bitmap.CompressFormat.JPEG, 1, bos);
 //write the bytes in file
-        FileOutputStream fos = new FileOutputStream(f);
-        fos.write(bitmapdata);
+        FileOutputStream fos = new FileOutputStream(filename);
+        fos.write(bos.toByteArray());
         fos.flush();
         fos.close();
         setFileName(archivo);
-        return f;
+        return filename;
     }
 
     public String getFileName() {
@@ -197,7 +214,7 @@ class FtpCliente extends AsyncTask {
     }
     public void executeRequestJson2(String data) throws Exception{
         //String url = "http://192.168.0.244:8080/publicidad/rest/v1/status/post";
-        String url = "http://192.168.1.222:8080/publicidad/rest/v1/status/post";
+        String url = "http://192.168.1.222:8080/publicidad2/rest/v1/status/post";
         JsonObjectRequest jsonObjReq = null;
         jsonObjReq = new JsonObjectRequest(Request.Method.POST,
                 url, actualizarNegocio(jsonObject), new Response.Listener<JSONObject>() {
@@ -224,9 +241,10 @@ class FtpCliente extends AsyncTask {
     }
     public JSONObject actualizarNegocio(JSONObject json){
         Gson gson = new Gson();
+        System.out.println("jsonObject: "+json.toString());
         Negocios neg = gson.fromJson(json.toString(), Negocios.class);
 
-        neg.setLogotipo(neg.getLogotipo()+getFileName());
+        neg.setLogotipo(neg.getLogotipo());
         JSONObject json2 = new JSONObject();
         try {
             json2.put("nombreNegocio", neg.getNombreNegocio());

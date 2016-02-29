@@ -1,5 +1,6 @@
 package admin.mx.com.perron;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -8,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
@@ -23,15 +25,21 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.apache.commons.codec.binary.Base64;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 
 import admin.mx.com.perron.entities.Negocios;
+import admin.mx.com.perron.logic.ImageEncode;
+import admin.mx.com.perron.logic.RealPathUtil;
 import admin.mx.com.perron.utils.Constants;
+import admin.mx.com.perron.utils.CropSquareTransformation;
 import admin.mx.com.perron.utils.Utils;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -45,14 +53,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     EditText edtResponse;
     FloatingActionButton fab;
     private static int RESULT_LOAD_IMG = 1;
-    String imgDecodableString;
     Button btnLista;
     Button btnChooseImage;
     Bitmap thumbnail = null;
     Snackbar snackbar;
     View.OnClickListener mOnClickListener;
     ImageView imgView;
-
+    String realPath;
     private int option;
 
     @Override
@@ -66,8 +73,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initialize();
         Bundle extras =  getIntent().getExtras();
         if(extras!=null){
-            /*String negocio = intent.getStringExtra("negocio");
-            Negocios negocios = Utils.createNegocios(negocio);*/
             option = extras.getInt("option");
             if(option== Constants.ACTUALIZAR){
                 TextView textTitulo = (TextView) findViewById(R.id.titulo);
@@ -223,10 +228,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         };
     }
-
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     public void chooseImage() {
         // Create intent to Open Image applications like Gallery, Google Photos
-        Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        //Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        galleryIntent.setType("image/*");
         // Start the Intent
         startActivityForResult(galleryIntent, RESULT_LOAD_IMG);
         //Toast.makeText(getApplicationContext(), "Choose image", Toast.LENGTH_LONG).show();
@@ -237,52 +244,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         try {
             // When an Image is picked
             if (requestCode == RESULT_LOAD_IMG && resultCode == RESULT_OK && null != data) {
-                // Get the Image from data
-
-                Uri selectedImage = data.getData();
-                String[] filePathColumn = {MediaStore.Images.Media.DATA};
-                for (int i = 0; i < filePathColumn.length; i++) {
-
-                    System.out.println("filePath: " + getRealPathFromURI3(selectedImage));
+                if (Build.VERSION.SDK_INT < 11) {// SDK < API11
+                    realPath = RealPathUtil.getRealPathFromURI_BelowAPI11(this, data.getData());
+                } else if (Build.VERSION.SDK_INT < 19) {// SDK >= 11 && SDK < 19
+                    realPath = RealPathUtil.getRealPathFromURI_API11to18(this, data.getData());
+                } else{// SDK > 19 (Android 4.4)
+                    realPath = RealPathUtil.getRealPathFromURI_API19(this, data.getData());
                 }
-                // Get the cursor
-                Cursor cursor = getContentResolver().query(selectedImage,
-                        filePathColumn, null, null, null);
-                // Move to first row
-                cursor.moveToFirst();
-                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                imgDecodableString = cursor.getString(columnIndex);
-                cursor.close();
-                // Set the Image in ImageView after decoding the String
-                Bitmap bitmap = BitmapFactory.decodeFile(imgDecodableString);
-                imgView.setImageBitmap(bitmap);
-
-
-                BitmapDrawable drawable = (BitmapDrawable) imgView.getDrawable();
-                thumbnail = drawable.getBitmap();
-
-
-                nuevoSnack(imgDecodableString);
+                File imageFile = new File(realPath);
+                Uri uriFromPath = Uri.fromFile(imageFile);
+                try {
+                    thumbnail = BitmapFactory.decodeStream(getContentResolver().openInputStream(uriFromPath));
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                CropSquareTransformation ctf = new CropSquareTransformation();
+                thumbnail = ctf.transform(thumbnail);
+                imgView.setImageBitmap(thumbnail);
+                nuevoSnack(realPath);
 
             } else {
                 nuevoSnack("You haven't picked Image");
             }
         } catch (Exception e) {
             nuevoSnack("You haven't picked Image" + getStackTrace(e));
+            e.printStackTrace();
         }
-
-    }
-
-
-
-
-    public String getRealPathFromURI3(Uri contentUri) {
-        String[] proj = {MediaStore.Images.Media.DATA};
-        Cursor cursor = managedQuery(contentUri, proj, null, null, null);
-        int column_index
-                = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        return cursor.getString(column_index);
     }
 
     public JSONObject getJsonObject2() {
@@ -291,8 +278,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             json.put("nombreNegocio", edtNombreNegocio.getText());
             json.put("direccion", edtDireccion.getText());
             json.put("coordenadas", edtCoordenadas.getText());
-            String host = (String) getText(R.string.host);
-            json.put("logotipo", host);
+            //ImageEncode(Context ctx, String imgPath, String encodedString, ProgressDialog prgDialog, String fileName
+            ImageEncode imgEncode = new ImageEncode( realPath  );
+            String imagen = imgEncode.getEncodedString();
+            json.put("logotipo", imagen);
+
         } catch (JSONException e) {
             System.out.println("******************************************************************************ERROR ON JSONOBject: " + getStackTrace(e) + "******************************************************************************ERROR ON JSONOBject: ");
         }

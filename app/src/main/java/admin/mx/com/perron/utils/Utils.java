@@ -2,23 +2,30 @@ package admin.mx.com.perron.utils;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.support.v7.app.AppCompatActivity;
 
 import com.google.gson.Gson;
 
+import org.apache.commons.codec.binary.Base64;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 
 import admin.mx.com.perron.entities.Negocios;
+import admin.mx.com.perron.entities.NegociosImage;
 
 public class Utils {
     public Utils(){
 
     }
     private static StringBuffer globalMessage = new StringBuffer("");
+
     public static void showMessage(Context context, final AppCompatActivity nuevaClase, String text ){
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
@@ -138,4 +145,26 @@ public class Utils {
         Negocios negocios = gson.fromJson(neg, Negocios.class);
         return negocios;
     }
+
+    public static Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+        Matrix matrix = new Matrix();
+// RESIZE THE BIT MAP
+        matrix.postScale(scaleWidth, scaleHeight);
+        // RECREATE THE NEW BITMAP
+        Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height,
+                matrix, false);
+        return resizedBitmap;
+    }
+    public static Bitmap getImage(String encodedImageStr){
+
+
+        return null;
+
+    }
+
+
 }

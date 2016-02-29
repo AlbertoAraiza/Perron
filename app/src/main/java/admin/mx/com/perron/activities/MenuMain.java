@@ -21,8 +21,11 @@ import java.util.List;
 import admin.mx.com.perron.MainActivity;
 import admin.mx.com.perron.R;
 import admin.mx.com.perron.entities.Negocios;
+import admin.mx.com.perron.entities.NegociosImage;
 import admin.mx.com.perron.logic.ListaResultado;
 import admin.mx.com.perron.utils.Constants;
+import admin.mx.com.perron.utils.MyProperties;
+import admin.mx.com.perron.utils.Utils;
 
 /**
  * Created by Jorge on 07/feb/2016.
@@ -97,11 +100,17 @@ public class MenuMain extends AdministracionMain implements View.OnClickListener
             listaResultado.execute();
         }
     }
-    public void loadListNegocios(List<Negocios> listaNegocios){
-        Log.d(Constants.appName, "return from webservice");
-        Intent intent = new Intent(this, ListNegociosActivity.class);
-        intent.putParcelableArrayListExtra(Constants.LISTA_NEGOCIOS, (ArrayList<? extends Parcelable>) listaNegocios);
-        Log.d(Constants.appName, "Calling ListNegociosActivity");
-        startActivity(intent);
+    //public void loadListNegocios(){
+    public void loadListNegocios(List<NegociosImage> listaNegocios){
+        try {
+            Log.d(Constants.appName, "return from webservice");
+            Intent intent = new Intent(this, ListNegociosActivity.class);
+            //intent.putParcelableArrayListExtra(Constants.LISTA_NEGOCIOS, (ArrayList<? extends Parcelable>) listaNegocios);
+            MyProperties.getInstance().listaNegocios = listaNegocios;
+            Log.d(Constants.appName, "Calling ListNegociosActivity");
+            startActivity(intent);
+        }catch(Exception e ){
+            Log.d("Error-loadListNegocios:", Utils.getStackTrace(e));
+        }
     }
 }
