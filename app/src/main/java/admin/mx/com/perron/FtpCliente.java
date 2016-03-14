@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import admin.mx.com.perron.entities.Negocios;
+import admin.mx.com.perron.utils.Constants;
 import admin.mx.com.perron.utils.CropSquareTransformation;
 import admin.mx.com.perron.utils.Utils;
 import it.sauronsoftware.ftp4j.FTPClient;
@@ -45,54 +46,29 @@ class FtpCliente extends AsyncTask {
     private JSONObject jsonObject;
     public static final int MY_SOCKET_TIMEOUT_MS = 5000;
     RequestQueue queue = null;
-    public FtpCliente(Context ctx, MainActivity ftpUpload, Bitmap bitmap, JSONObject jsonObject){
-    //public FtpCliente(Context ctx, MainActivity ftpUpload, Bitmap bitmap, JSONObject jsonObject){
+    int op;
+    public FtpCliente(Context ctx, MainActivity ftpUpload, Bitmap bitmap, JSONObject jsonObject, int op){
         this.ctx = ctx;
         this.ftpUpload = ftpUpload;
         this.bitmap = bitmap;
         setJsonObject(jsonObject);
         queue = Volley.newRequestQueue(ctx);
-    }
-    private Exception exception;
-    /*********  work only for Dedicated IP ***********/
-    static final String FTP_HOST= "ftp.byethost16.com";
-
-    /*********  FTP USERNAME ***********/
-    static final String FTP_USER = "b16_16833864";
-
-    /*********  FTP PASSWORD ***********/
-    static final String FTP_PASS  ="Temporal2005";
-
-
-    String remoteDirectory = "/htdocs";
-
-
-    protected void onPostExecute() {
-        // TODO: check this.exception
-        // TODO: do something with the feed
-    }
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    public void uploadFile() throws Exception{
-        //Utils.showMessage(ctx, app, "Caliz" );
-        FTPClient client = null;
-        //File fileName = new File("/storage/emulated/0/DCIM/Camera/IMG_20151031_165659.jpg");
-        /*ByteArrayOutputStream out = new ByteArrayOutputStream();
-
-        File fileName = convertImage2File(bitmap);
-        client = new FTPClient();
-        client.connect(FTP_HOST, 21);
-        client.login(FTP_USER, FTP_PASS);
-        client.setType(FTPClient.TYPE_BINARY);
-        client.changeDirectory(remoteDirectory);
-        client.upload(fileName, new MyTransferListener());*/
+        Log.d("Save or update:",jsonObject.toString());
+        this.op = op;
     }
 
     @Override
     protected Object doInBackground(Object[] params) {
-        //Utils.showMessage(ctx, app, "uploading file" );
         try {
             try {
-                executeRequestJson2("");
+
+                if (op == Constants.CREAR) {
+                    String url = Constants.URL_BASE +Constants.SAVE_METHOD;
+                    executeRequestJson2(url);
+                }else if (op == Constants.ACTUALIZAR) {
+                    String url =  Constants.URL_BASE +Constants.UPDATE_METHOD;
+                    executeRequestJson2(url);
+                }
             }catch (Exception e) {
                 MainActivity.getStackTrace(e);
                 e.printStackTrace();
@@ -109,115 +85,18 @@ class FtpCliente extends AsyncTask {
     protected void onPreExecute() {
         super.onPreExecute();
         progressDialog= ProgressDialog.show(ftpUpload, "Uploading image to the server","Uploading ....", true);
-
-        //do initialization
     }
 
     @Override
     protected void onPostExecute(Object o) {
         super.onPostExecute(o);
         progressDialog.dismiss();
-        //Utils.showMessage(ctx, app, "File uploaded successfully");
-
     }
+    public void executeRequestJson2(String url) throws Exception{
 
-    /*******  Used to file upload and show progress  **********/
-
-    public class MyTransferListener implements FTPDataTransferListener {
-
-        public void started() {
-
-            //btn.setVisibility(View.GONE);
-            // Transfer started
-            //Toast.makeText(ctx, " Upload Started ...", Toast.LENGTH_SHORT).show();
-            //System.out.println(" Upload Started ...");*/
-        }
-
-        public void transferred(int length) {
-/*
-            // Yet other length bytes has been transferred since the last time this
-            // method was called
-            Toast.makeText(getBaseContext(), " transferred ..." + length, Toast.LENGTH_SHORT).show();
-            //System.out.println(" transferred ..." + length);
-            */
-        }
-
-        public void completed() {
-/*
-            btn.setVisibility(View.VISIBLE);
-            // Transfer completed
-
-            Toast.makeText(getBaseContext(), " completed ...", Toast.LENGTH_SHORT).show();
-            //System.out.println(" completed ..." );
-            */
-        }
-
-        public void aborted() {
-/*
-            btn.setVisibility(View.VISIBLE);
-            // Transfer aborted
-            Toast.makeText(getBaseContext()," transfer aborted ,please try again...", Toast.LENGTH_SHORT).show();
-            //System.out.println(" aborted ..." );
-            */
-        }
-
-        public void failed() {
-/*
-            btn.setVisibility(View.VISIBLE);
-            // Transfer failed
-            System.out.println(" failed ..." );
-            */
-        }
-
-    }
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    public File convertImage2File(Bitmap image) throws IOException {
-        //create a file to write bitmap data
-        String archivo = Utils.replaceBlank(null)+".jpg";
-
-        CropSquareTransformation cop = new CropSquareTransformation();
-        Bitmap original = cop.transform(bitmap);
-
-
-        File filename = new File(Environment.getExternalStorageDirectory()
-                + File.separator + archivo);
-
-        filename.createNewFile();
-//Convert bitmap to byte array
-
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        original = Bitmap.createScaledBitmap(original, 2000, 2000, true);
-        original.compress(Bitmap.CompressFormat.JPEG, 1, bos);
-//write the bytes in file
-        FileOutputStream fos = new FileOutputStream(filename);
-        fos.write(bos.toByteArray());
-        fos.flush();
-        fos.close();
-        setFileName(archivo);
-        return filename;
-    }
-
-    public String getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
-    public JSONObject getJsonObject() {
-        return jsonObject;
-    }
-
-    public void setJsonObject(JSONObject jsonObject) {
-        this.jsonObject = jsonObject;
-    }
-    public void executeRequestJson2(String data) throws Exception{
-        //String url = "http://192.168.0.244:8080/publicidad/rest/v1/status/post";
-        String url = "http://192.168.1.222:8080/publicidad2/rest/v1/status/post";
-        JsonObjectRequest jsonObjReq = null;
-        jsonObjReq = new JsonObjectRequest(Request.Method.POST,
-                url, actualizarNegocio(jsonObject), new Response.Listener<JSONObject>() {
+        JsonObjectRequest jsonObjReq =
+                new JsonObjectRequest(Request.Method.POST,
+                url, jsonObject.toString(), new Response.Listener<JSONObject>() {
 
             @Override
             public void onResponse(JSONObject response) {
@@ -234,27 +113,13 @@ class FtpCliente extends AsyncTask {
             }
         });
         jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(
-                MY_SOCKET_TIMEOUT_MS,
+                //MY_SOCKET_TIMEOUT_MS,
+                5000000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(jsonObjReq);
     }
-    public JSONObject actualizarNegocio(JSONObject json){
-        Gson gson = new Gson();
-        System.out.println("jsonObject: "+json.toString());
-        Negocios neg = gson.fromJson(json.toString(), Negocios.class);
-
-        neg.setLogotipo(neg.getLogotipo());
-        JSONObject json2 = new JSONObject();
-        try {
-            json2.put("nombreNegocio", neg.getNombreNegocio());
-            json2.put("direccion", neg.getDireccion());
-            json2.put("coordenadas", neg.getCoordenadas());
-            json2.put("logotipo", neg.getLogotipo());
-        }catch (JSONException e) {
-            System.out.println("******************************************************************************ERROR ON JSONOBject: ");
-        }
-        Log.d("Negociazo: ", json2.toString());
-        return json2;
+    public void setJsonObject(JSONObject jsonObject) {
+        this.jsonObject = jsonObject;
     }
 }

@@ -17,6 +17,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.format.Formatter;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,12 +35,16 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.List;
 
 import admin.mx.com.perron.entities.Negocios;
+import admin.mx.com.perron.entities.NegociosImage;
 import admin.mx.com.perron.logic.ImageEncode;
 import admin.mx.com.perron.logic.RealPathUtil;
 import admin.mx.com.perron.utils.Constants;
 import admin.mx.com.perron.utils.CropSquareTransformation;
+import admin.mx.com.perron.utils.GPSTracker;
+import admin.mx.com.perron.utils.MyProperties;
 import admin.mx.com.perron.utils.Utils;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -60,7 +65,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     View.OnClickListener mOnClickListener;
     ImageView imgView;
     String realPath;
-    private int option;
+    private int option = 999;
+    private NegociosImage negociosImage;
+    private GPSTracker gps;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +84,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if(option== Constants.ACTUALIZAR){
                 TextView textTitulo = (TextView) findViewById(R.id.titulo);
                 textTitulo.setText("Modificar Negocio");
+                int position = extras.getInt("position");
+                List<NegociosImage> listaNegocios = MyProperties.getInstance().listaNegocios;
+                negociosImage = listaNegocios.get(position);
+                setValues(negociosImage);
+            }else if(option== Constants.CREAR){
+                    gps = new GPSTracker(getApplicationContext(), this);
+                    if(gps.getLocation()){
+                        edtCoordenadas.setText(gps.getLatitude()+","+gps.getLongitude());
+                    }else{
+                        edtCoordenadas.setText("");
+                    }
             }
         }
     }
@@ -119,23 +137,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnLista = (Button)findViewById(R.id.btn_lista);
         btnLista.setOnClickListener(this);
     }
-    public void setValues() {
-        edtNombreNegocio = (EditText) findViewById(R.id.edtNombreNegocio);
-        edtDireccion = (EditText) findViewById(R.id.edtDireccion);
-        edtCoordenadas = (EditText) findViewById(R.id.edtCoordenadas);
-        edtLogotipo = (EditText) findViewById(R.id.edtLogotipo);
-        edtResponse = (EditText) findViewById(R.id.edtResponse);
-        textResult = (TextView) findViewById(R.id.textResult);
-        textResult2 = (TextView) findViewById(R.id.ip);
-        btnChooseImage = (Button) findViewById(R.id.btn_choose_image);
-        btnChooseImage.setOnClickListener(this);
-        imgView = (ImageView) findViewById(R.id.image_ftp);
-        WifiManager wm = (WifiManager) getSystemService(WIFI_SERVICE);
-        String ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
-        textIp = (TextView)findViewById(R.id.ip);
-        textIp.setText("IP address: "+ip);
-        btnLista = (Button)findViewById(R.id.btn_lista);
-        btnLista.setOnClickListener(this);
+    public void setValues(NegociosImage negociosImage) {
+        imgView.setImageBitmap(negociosImage.getLogotipo());
+        edtNombreNegocio.setText(negociosImage.getNombreNegocio());
+        edtDireccion.setText(negociosImage.getDireccion());
+        edtCoordenadas.setText(negociosImage.getCoordenadas());
+        thumbnail = negociosImage.getLogotipo();
     }
 
     public boolean validar(View view) {
@@ -164,9 +171,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         res.setCoordenadas(edtCoordenadas.getText().toString());
         res.setDireccion(edtDireccion.getText().toString());
         res.setLogotipo(edtLogotipo.getText().toString());
+        Log.d("Create: ", res.toString());
         return res;
     }
 
+    public Negocios createNegocioUpdate() {
+        Negocios res = new Negocios();
+        res.setNombreNegocio(edtNombreNegocio.getText().toString());
+        res.setCoordenadas(edtCoordenadas.getText().toString());
+        res.setDireccion(edtDireccion.getText().toString());
+        res.setLogotipo(edtLogotipo.getText().toString());
+        res.setIdNegocio(negociosImage.getIdNegocio());
+        Log.d("Update: ", res.toString());
+        return res;
+    }
     public void mostrarMesaje(String message) {
         textResult.setText(message.toString());
         edtResponse.setText(message.toString());
@@ -196,14 +214,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     String message = Utils.convertGson(nego);
                     //executeRequestJson2(message);
                     if (thumbnail != null) {
-                        FtpCliente ftp = new FtpCliente(getApplicationContext(), this, thumbnail, getJsonObject2());
+                        FtpCliente ftp = new FtpCliente(getApplicationContext(), this, thumbnail, getJsonObject2(), option);
                         ftp.execute();
                     } else {
                         nuevoSnack("Please select an image first that all");
                     }
                 }
-            }else{
-                nuevoSnack("Here it will be update all");
+            }else if(option==Constants.ACTUALIZAR){
+                if (validar(v)) {
+                    Negocios nego = createNegocioUpdate();
+                    String message = Utils.convertGson(nego);
+                    //executeRequestJson2(message);
+                    if (thumbnail != null) {
+                        FtpCliente ftp = new FtpCliente(getApplicationContext(), this, thumbnail, getJsonObject2(), option);
+                        ftp.execute();
+                    } else {
+                        nuevoSnack("Please select an image first that all");
+                    }
+                }
             }
         }else if (btnChooseImage == v) {
             chooseImage();
@@ -278,15 +306,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             json.put("nombreNegocio", edtNombreNegocio.getText());
             json.put("direccion", edtDireccion.getText());
             json.put("coordenadas", edtCoordenadas.getText());
-            //ImageEncode(Context ctx, String imgPath, String encodedString, ProgressDialog prgDialog, String fileName
-            ImageEncode imgEncode = new ImageEncode( realPath  );
-            String imagen = imgEncode.getEncodedString();
-            json.put("logotipo", imagen);
+            if(option == Constants.ACTUALIZAR){
+                json.put("idNegocio", negociosImage.getIdNegocio());
+                ImageEncode imgEncode = new ImageEncode(realPath);
+                String imagen = imgEncode.getEncodedString(thumbnail);
+                json.put("logotipo", imagen);
+            }else{
+                ImageEncode imgEncode = new ImageEncode(realPath);
+                String imagen = imgEncode.getEncodedString();
+                json.put("logotipo", imagen);
+            }
 
         } catch (JSONException e) {
             System.out.println("******************************************************************************ERROR ON JSONOBject: " + getStackTrace(e) + "******************************************************************************ERROR ON JSONOBject: ");
         }
+        System.out.println("JSObject: "+json.toString());
         return json;
     }
+
 }
 

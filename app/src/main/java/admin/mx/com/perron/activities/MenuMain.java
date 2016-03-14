@@ -105,7 +105,6 @@ public class MenuMain extends AdministracionMain implements View.OnClickListener
         try {
             Log.d(Constants.appName, "return from webservice");
             Intent intent = new Intent(this, ListNegociosActivity.class);
-            //intent.putParcelableArrayListExtra(Constants.LISTA_NEGOCIOS, (ArrayList<? extends Parcelable>) listaNegocios);
             MyProperties.getInstance().listaNegocios = listaNegocios;
             Log.d(Constants.appName, "Calling ListNegociosActivity");
             startActivity(intent);

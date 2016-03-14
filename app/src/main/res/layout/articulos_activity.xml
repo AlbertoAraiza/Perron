@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal">
+        <ImageView
+            android:src="@drawable/vochito"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:id="@+id/image_negocio_articulos_activity"
+            android:layout_gravity="top"
+            android:layout_alignParentLeft="true"/>
+        <TextView
+            android:layout_height="20dp"
+            android:layout_width="20dp"
+            android:id="@+id/id_articulos_activity"
+            android:layout_toRightOf="@id/image_negocio_articulos_activity"
+            android:text="id neg"
+            />
+        <TextView
+            android:layout_height="20dp"
+            android:layout_width="20dp"
+            android:id="@+id/nombre_negocio_articulos_activity"
+            android:layout_toRightOf="@id/id_articulos_activity"
+            android:text="nombre negocio"
+            />
+
+        <TextView
+            android:layout_height="20dp"
+            android:layout_width="20dp"
+            android:id="@+id/direccion_articulos_activity"
+            android:layout_toRightOf="@id/image_negocio_articulos_activity"
+            android:layout_above="@id/nombre_negocio_articulos_activity"
+            android:text="direccion"
+            />
+        <TextView
+            android:layout_height="20dp"
+            android:layout_width="20dp"
+            android:id="@+id/coordenadas_articulos_activity"
+            android:layout_toRightOf="@id/image_negocio_articulos_activity"
+            android:layout_above="@id/direccion_articulos_activity"
+            android:text="coordenadas"
+            />
+
+
+    </RelativeLayout>

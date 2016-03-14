@@ -3,6 +3,16 @@
     <string name="action_settings">Settings</string>
     <string name="direccion">Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. </string>
     <string name="host">http://jorgejorge26.byethost16.com/</string>
+
+    <string name="gray">Gris</string>
+    <string name="green">Verde</string>
+    <string name="red">Rojo</string>
+    <string name="orange">Naranja</string>
+    <string name="purple">Morado</string>
+    <string name="dark_blue">Morado</string>
+
+
+
 </resources>
 
 <!--

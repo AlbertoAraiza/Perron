@@ -46,5 +46,15 @@ public class ImageEncode {
 
         return byte_arr;
     }
+    public String getEncodedString(Bitmap bitmap) {
+        bitmap = Bitmap.createScaledBitmap(bitmap,(int)(bitmap.getWidth()*0.5), (int)(bitmap.getHeight()*0.5), true);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        // Must compress the Image to reduce image size to make upload easy
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 30, stream);
+        byte[] byte_arr = stream.toByteArray();
+        // Encode Image to String
+        String encodedString = Base64.encodeToString(byte_arr, 0);
+        return encodedString;
+    }
 
 }

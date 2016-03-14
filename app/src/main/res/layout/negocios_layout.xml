@@ -55,6 +55,18 @@
             android:layout_toRightOf="@id/logotipo"
             android:layout_below="@id/direccion"
             android:gravity="bottom"/>
+        <TextView
+            android:id="@+id/id_record"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Email"
+            android:textSize="1dp"
+            android:layout_marginTop="1dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="1dp"
+            android:layout_toRightOf="@id/coordenadas"
+            android:gravity="bottom"
+            android:visibility="gone"/>
 
         </RelativeLayout>
     </android.support.v7.widget.CardView>

@@ -15,18 +15,12 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
-import org.apache.commons.codec.binary.Base64;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-
 import admin.mx.com.perron.R;
 import admin.mx.com.perron.activities.MenuMain;
-import admin.mx.com.perron.entities.Negocios;
 import admin.mx.com.perron.entities.NegociosImage;
 import admin.mx.com.perron.entities.NegociosImage2;
 import admin.mx.com.perron.utils.Constants;
@@ -47,11 +41,6 @@ public class ListaResultado extends AsyncTask {
         queue = Volley.newRequestQueue(ctx);
         this.ma = ma;
     }
-
-    protected void onPostExecute() {
-        // TODO: check this.exception
-        // TODO: do something with the feed
-    }
     @Override
     protected Object doInBackground(Object[] params) {
         try {
@@ -68,12 +57,14 @@ public class ListaResultado extends AsyncTask {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
+        Log.d(Constants.appName, "Creating windows to show progress of activity");
         progressDialog= ProgressDialog.show(ma, "Getting data","Receiving data ....", true);
     }
 
     @Override
     protected void onPostExecute(Object o) {
         super.onPostExecute(o);
+        Log.d(Constants.appName, "Destroying window to show progress of activity");
         progressDialog.dismiss();
     }
 
@@ -81,7 +72,7 @@ public class ListaResultado extends AsyncTask {
         this.jsonObject = jsonObject;
     }
     public void executeRequestJson2(String data) throws Exception{
-        String url = "http://192.168.1.222:8080/publicidad2/rest/v1/status/getNegocios";
+        String url = Constants.URL_BASE+Constants.LISTA_NEGOCIOS;
         StringRequest stringReq = null;
         stringReq = new StringRequest(Request.Method.POST,
                 url, new Response.Listener<String>() {

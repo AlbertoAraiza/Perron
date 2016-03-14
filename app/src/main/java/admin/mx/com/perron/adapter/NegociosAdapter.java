@@ -1,19 +1,32 @@
 package admin.mx.com.perron.adapter;
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.util.List;
 import admin.mx.com.perron.MainActivity;
 import admin.mx.com.perron.R;
+import admin.mx.com.perron.activities.ListArticulosActivity;
+import admin.mx.com.perron.activities.MenuMain;
 import admin.mx.com.perron.entities.Negocios;
 import admin.mx.com.perron.entities.NegociosImage;
+import admin.mx.com.perron.logic.DeleteArticulo;
 import admin.mx.com.perron.utils.Constants;
+import admin.mx.com.perron.utils.Utils;
 
 /**
  * Created by Jorge on 07/feb/2016.
@@ -21,12 +34,13 @@ import admin.mx.com.perron.utils.Constants;
 public class NegociosAdapter extends RecyclerView.Adapter<NegociosAdapter.NegocioViewHolder>{
     private List<NegociosImage> negociosList;
     private Context mContext;
-
+    private ContextMenu.ContextMenuInfo mContextMenuInfo = null;
+    public static final int DELETE_RECORD = 0;
+    public static final int UPDATE_RECORD = 1;
     public NegociosAdapter(List<NegociosImage> negociosList, Context mContext) {
         this.negociosList = negociosList;
         this.mContext = mContext;
     }
-
     @Override
     public NegocioViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View itemView = LayoutInflater.
@@ -44,6 +58,8 @@ public class NegociosAdapter extends RecyclerView.Adapter<NegociosAdapter.Negoci
         holder.vNombreNegocio.setText(negocio.getNombreNegocio());
         holder.vDireccion.setText(negocio.getDireccion());
         holder.vCoordenadas.setText(negocio.getCoordenadas());
+        holder.vIdRecord.setText(negocio.getIdNegocio()+"");
+        holder.itemView.setLongClickable(true);
     }
 
     @Override
@@ -51,11 +67,12 @@ public class NegociosAdapter extends RecyclerView.Adapter<NegociosAdapter.Negoci
         return negociosList.size();
     }
 
-    public static class NegocioViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        protected ImageView vLogotipo;
-        protected TextView vNombreNegocio;
-        protected TextView vDireccion;
-        protected TextView vCoordenadas;
+    public class NegocioViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener, View.OnLongClickListener{
+        public ImageView vLogotipo;
+        public TextView vNombreNegocio;
+        public TextView vDireccion;
+        public TextView vCoordenadas;
+        public TextView vIdRecord;
 
 
         public NegocioViewHolder(View v) {
@@ -64,8 +81,11 @@ public class NegociosAdapter extends RecyclerView.Adapter<NegociosAdapter.Negoci
             vNombreNegocio = (TextView)  v.findViewById(R.id.nombre_negocio);
             vDireccion = (TextView)  v.findViewById(R.id.direccion);
             vCoordenadas = (TextView) v.findViewById(R.id.coordenadas);
+            vIdRecord = (TextView)v.findViewById(R.id.id_record);
 
             v.setOnClickListener(this);
+            v.setOnLongClickListener(this);
+            v.setOnCreateContextMenuListener(this);
         }
 
         @Override
@@ -74,10 +94,71 @@ public class NegociosAdapter extends RecyclerView.Adapter<NegociosAdapter.Negoci
             Intent intent = new Intent(v.getContext(), MainActivity.class);
             intent.putExtra("option", Constants.ACTUALIZAR);
             int position = getLayoutPosition();
-
+            intent.putExtra("position", position);
             //intent.putExtra("option", getNegociosList().get(getAdapterPosition()));
             v.getContext().startActivity(intent);
+            v.setOnCreateContextMenuListener(this);
         }
+
+        @Override
+        public void onCreateContextMenu(ContextMenu menu, final View v, ContextMenu.ContextMenuInfo menuInfo) {
+            menu.setHeaderTitle("Select The Action");
+            menu.add("Borrar registro permanentemente?").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which) {
+                                case DialogInterface.BUTTON_POSITIVE:
+                                    //Yes button clicked
+                                    int position = getLayoutPosition();
+                                    NegociosImage negociosImage = negociosList.get(position);
+                                    negociosList.remove(position);
+                                    notifyItemRemoved(position);
+                                    Toast.makeText(v.getContext(), " Registro borrado!! " + negociosImage.getIdNegocio(), Toast.LENGTH_SHORT).show();
+                                    DeleteArticulo deleteArticulo = new DeleteArticulo(getmContext(), negociosImage);
+                                    deleteArticulo.execute();
+                                    break;
+
+                                case DialogInterface.BUTTON_NEGATIVE:
+                                    //No button clicked
+                                    break;
+                            }
+                        }
+                    };
+                    AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                    builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
+                            .setNegativeButton("No", dialogClickListener).show();
+                    return true;
+                }
+            });
+            menu.add("Agregar articulo").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    try {
+                        int position = getLayoutPosition();
+                        Log.d(Constants.appName, "position");
+                        Toast.makeText(v.getContext(), " agregar articulo!! ", Toast.LENGTH_SHORT).show();
+                        callArticulo(position);
+
+                    } catch (Exception e) {
+                        Log.d("Error:NegociosAdapter: ", Utils.getStackTrace(e));
+                    }
+                    return true;
+                }
+            });
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            v.setOnCreateContextMenuListener(this);
+            return false;
+        }
+
+
     }
 
     public List<NegociosImage> getNegociosList() {
@@ -95,4 +176,11 @@ public class NegociosAdapter extends RecyclerView.Adapter<NegociosAdapter.Negoci
     public void setmContext(Context mContext) {
         this.mContext = mContext;
     }
+    public void callArticulo(int position){
+        Intent intent = new Intent(getmContext(), ListArticulosActivity.class);
+        intent.putExtra("position", position);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        getmContext().startActivity(intent);
+    }
+
 }
