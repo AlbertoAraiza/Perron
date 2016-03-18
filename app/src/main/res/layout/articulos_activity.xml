@@ -12,36 +12,44 @@
             android:layout_gravity="top"
             android:layout_alignParentLeft="true"/>
         <TextView
-            android:layout_height="20dp"
-            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
             android:id="@+id/id_articulos_activity"
             android:layout_toRightOf="@id/image_negocio_articulos_activity"
             android:text="id neg"
+            android:layout_alignTop="@id/image_negocio_articulos_activity"
             />
         <TextView
-            android:layout_height="20dp"
-            android:layout_width="20dp"
             android:id="@+id/nombre_negocio_articulos_activity"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
             android:layout_toRightOf="@id/id_articulos_activity"
             android:text="nombre negocio"
+            android:layout_below="@id/id_articulos_activity"
             />
 
         <TextView
-            android:layout_height="20dp"
-            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
             android:id="@+id/direccion_articulos_activity"
             android:layout_toRightOf="@id/image_negocio_articulos_activity"
-            android:layout_above="@id/nombre_negocio_articulos_activity"
             android:text="direccion"
+            android:layout_below="@id/nombre_negocio_articulos_activity"
             />
         <TextView
-            android:layout_height="20dp"
-            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
             android:id="@+id/coordenadas_articulos_activity"
             android:layout_toRightOf="@id/image_negocio_articulos_activity"
-            android:layout_above="@id/direccion_articulos_activity"
             android:text="coordenadas"
+            android:layout_below="@id/direccion_articulos_activity"
             />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/articulos_recycler_view"
+        android:scrollbars="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/image_negocio_articulos_activity"/>
 
 
     </RelativeLayout>

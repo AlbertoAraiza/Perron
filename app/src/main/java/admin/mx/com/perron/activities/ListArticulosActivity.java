@@ -8,11 +8,14 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
-
 import admin.mx.com.perron.MainActivity;
 import admin.mx.com.perron.R;
+import admin.mx.com.perron.adapter.ArticuloAdapter;
 import admin.mx.com.perron.adapter.NegociosAdapter;
+import admin.mx.com.perron.dao.DaoArticulo;
+import admin.mx.com.perron.entities.Articulo;
 import admin.mx.com.perron.entities.NegociosImage;
 import admin.mx.com.perron.utils.Constants;
 import admin.mx.com.perron.utils.MyProperties;
@@ -27,6 +30,9 @@ public class ListArticulosActivity extends AdministracionMain{
     TextView nombreNegocio;
     TextView direccion;
     TextView coordenadas;
+    private List<Articulo> movieList = new ArrayList<>();
+    private RecyclerView recyclerView;
+    private ArticuloAdapter mAdapter;
     public ListArticulosActivity() {
 
     }
@@ -43,17 +49,15 @@ public class ListArticulosActivity extends AdministracionMain{
                 negociosImage = listaNegocios.get(position);
                 initializeView();
             }
-            /*
-            RecyclerView recList = (RecyclerView) findViewById(R.id.cardList);
-
+            RecyclerView recList = (RecyclerView) findViewById(R.id.articulos_recycler_view);
             recList.setHasFixedSize(true);
             LinearLayoutManager llm = new LinearLayoutManager(this);
             llm.setOrientation(LinearLayoutManager.VERTICAL);
             recList.setLayoutManager(llm);
-            List<NegociosImage> listaNegocios = MyProperties.getInstance().listaNegocios;
-            NegociosAdapter adapter = new NegociosAdapter(listaNegocios, getBaseContext());
+            DaoArticulo daoArticulo = new DaoArticulo();
+            List<Articulo> listaArticulo = daoArticulo.getListaArticulo();
+            ArticuloAdapter adapter = new ArticuloAdapter(listaArticulo);
             recList.setAdapter(adapter);
-            */
         }catch(Exception e){
             Log.d("Error:ListaNEgocios: ", Utils.getStackTrace(e));
         }

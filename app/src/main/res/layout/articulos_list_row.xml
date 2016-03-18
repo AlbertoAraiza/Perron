@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:clickable="true"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/image_row"
+        android:layout_width="50dp"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/vochito"
+        android:layout_height="50dp"
+        android:gravity="top"/>
+
+    <TextView
+        android:id="@+id/id_articulo_row"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        android:layout_alignParentTop="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/image_row"
+        android:layout_alignTop="@id/image_row"
+        android:gravity="top"
+        />
+
+    <TextView
+        android:id="@+id/nombre_articulo_row"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/id_articulo_row"/>
+
+    <TextView
+        android:id="@+id/precio_row"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/nombre_articulo_row"/>
+    <TextView
+        android:id="@+id/descripcion_row"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/precio_row"/>
+    <TextView
+        android:id="@+id/id_negocio_row"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/descripcion_row"/>
+
+
+
+</RelativeLayout>
