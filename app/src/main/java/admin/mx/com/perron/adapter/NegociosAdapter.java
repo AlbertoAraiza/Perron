@@ -67,7 +67,8 @@ public class NegociosAdapter extends RecyclerView.Adapter<NegociosAdapter.Negoci
         return negociosList.size();
     }
 
-    public class NegocioViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener, View.OnLongClickListener{
+    public class NegocioViewHolder extends RecyclerView.ViewHolder
+            implements View.OnClickListener, View.OnCreateContextMenuListener, View.OnLongClickListener{
         public ImageView vLogotipo;
         public TextView vNombreNegocio;
         public TextView vDireccion;
