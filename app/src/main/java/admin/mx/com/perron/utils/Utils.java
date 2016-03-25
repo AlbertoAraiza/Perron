@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import com.google.gson.Gson;
 
 import org.apache.commons.codec.binary.Base64;
+
+import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -113,8 +115,6 @@ public class Utils {
             Timestamp ts = new Timestamp(time);
             str = ts.toString();
         }
-
-
         StringBuffer strBuffer = new StringBuffer("");
         for(int i=0;i<str.length();i++){
             if(i==0){
@@ -159,11 +159,15 @@ public class Utils {
                 matrix, false);
         return resizedBitmap;
     }
-    public static Bitmap getImage(String encodedImageStr){
-
-
-        return null;
-
+    public static String getEncodedString(Bitmap bitmap) {
+        bitmap = Bitmap.createScaledBitmap(bitmap,(int)(bitmap.getWidth()*0.5), (int)(bitmap.getHeight()*0.5), true);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        // Must compress the Image to reduce image size to make upload easy
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 30, stream);
+        byte[] byte_arr = stream.toByteArray();
+        // Encode Image to String
+        String encodedString = android.util.Base64.encodeToString(byte_arr, 0);
+        return encodedString;
     }
 
 

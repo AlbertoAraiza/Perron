@@ -21,6 +21,7 @@ import admin.mx.com.perron.dao.DaoImages;
 import admin.mx.com.perron.entities.Articulo;
 import admin.mx.com.perron.entities.Images;
 import admin.mx.com.perron.entities.NegociosImage;
+import admin.mx.com.perron.logic.ImageEncode;
 import admin.mx.com.perron.utils.Constants;
 import admin.mx.com.perron.utils.MyProperties;
 import admin.mx.com.perron.utils.Utils;
@@ -37,7 +38,8 @@ public class AgregarArticuloActivity extends AdministracionMain implements View.
     private Button btnGuardarArticulos;
     private int TAKE_PHOTO_CODE = 1;
     private LinearLayout layoutImage;
-    private ArrayList<Bitmap> imagesList;
+    private ArrayList<String> imagesList;
+    private int idNegocio;
     public AgregarArticuloActivity() {
 
     }
@@ -51,6 +53,7 @@ public class AgregarArticuloActivity extends AdministracionMain implements View.
             if(extras!=null) {
                 initializeView();
                 int action = (int) extras.get("action");
+                idNegocio = ((Long) extras.get("action")).intValue();
                 if (action== Constants.NEW_ITEM) {
 
                 }else{
@@ -59,7 +62,7 @@ public class AgregarArticuloActivity extends AdministracionMain implements View.
                 }
             }
         }catch(Exception e){
-            Log.d("Error:AgregarArticuloA", Utils.getStackTrace(e));
+            Log.d("Error:AgregarArticulo: ", Utils.getStackTrace(e));
         }
     }
     public void initializeView(){
@@ -71,7 +74,7 @@ public class AgregarArticuloActivity extends AdministracionMain implements View.
         editPrecioArticulos = (TextView) findViewById(R.id.edit_precio_articulos);
         editNombreArticulos = (TextView) findViewById(R.id.edit_nombre_articulos);
         editDescripcionArticulos = (TextView) findViewById(R.id.edit_descripcion_articulos);
-        imagesList = new ArrayList<Bitmap>();
+        imagesList = null;
 
         /*imageNegocio = (ImageView) findViewById(R.id.image_negocio_articulos_activity);
         idNegocio = (TextView) findViewById(R.id.id_articulos_activity);
@@ -94,26 +97,27 @@ public class AgregarArticuloActivity extends AdministracionMain implements View.
             Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             startActivityForResult(cameraIntent, TAKE_PHOTO_CODE);
         }else if(v==btnGuardarArticulos){
-            Utils.showMessage(this, this,"Articulo guardado es: "+getArticulo());
+            if(getArticulo()) {
+                Utils.showMessage(this, this, "Articulo guardado exitosamente: ");
+            }else{
+                Utils.showMessage(this, this, "Por favor tome una foto del articulo ");
+            }
         }
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == TAKE_PHOTO_CODE && resultCode == RESULT_OK) {
             Log.d("CameraDemo", "Pic saved");
             Bitmap photo = (Bitmap) data.getExtras().get("data");
-
-
-
+            imagesList = new ArrayList<String>();
             //View child = getLayoutInflater().inflate(R.layout.child, null);
             ImageView  child = getNewImage(photo);
-            imagesList.add(photo);
+            imagesList.add(Utils.getEncodedString(photo));
             layoutImage.addView(child);
         }
     }
-    public ImageView  getNewImage(Bitmap picture){
+    public ImageView getNewImage(Bitmap picture){
         ImageView image = new ImageView(this);
         image.setLayoutParams(new android.view.ViewGroup.LayoutParams(808, 608));
         image.setMaxHeight(1200);
@@ -121,26 +125,22 @@ public class AgregarArticuloActivity extends AdministracionMain implements View.
         image.setImageBitmap(picture);
         return image;
     }
-    public Articulo getArticulo(){
-        int childCount = ((ViewGroup)layoutImage).getChildCount();
-        Articulo articulo = new Articulo();
-        articulo.setPrecio(Double.parseDouble(editPrecioArticulos.getText().toString()));
-        articulo.setNombreArticulo(editNombreArticulos.getText().toString());
-        articulo.setDescripcion(editDescripcionArticulos.getText().toString());
-        articulo.setImageBitmap(imagesList.get(0));
-        DaoArticulo daoArticulo = new DaoArticulo();
-        daoArticulo.saveArticulo(articulo);
-        DaoImages daoImages = new DaoImages();
-        for(int i=0; i<imagesList.size(); i++) {
-            Images images = new Images();
-            images.setIdImagen(i);
-            images.setIdArticulo(i);
-            images.setImage(imagesList.get(i));
-            daoImages.saveImage(images);
+    public boolean getArticulo(){
+        if(imagesList==null){
+            return false;
+        }else {
+            int childCount = ((ViewGroup) layoutImage).getChildCount();
+            Articulo articulo = new Articulo();
+            articulo.setPrecio(Double.parseDouble(editPrecioArticulos.getText().toString()));
+            articulo.setNombreArticulo(editNombreArticulos.getText().toString());
+            articulo.setDescripcion(editDescripcionArticulos.getText().toString());
+            articulo.setImageCode(imagesList.get(0));
+            articulo.setIdNegocio(idNegocio);
+            DaoArticulo daoArticulo = new DaoArticulo(getApplicationContext(), Constants.GUARDAR_ARTICULO, this);
+            daoArticulo.saveArticulo(articulo);
+            return true;
         }
-        return articulo;
     }
-
     public boolean loadDataFromArticulo(Articulo articulo){
         editPrecioArticulos.setText(String.valueOf(articulo.getPrecio()));
         editNombreArticulos.setText(articulo.getNombreArticulo());
@@ -150,7 +150,6 @@ public class AgregarArticuloActivity extends AdministracionMain implements View.
     }
     public void agregarImages( LinearLayout layoutImage){
         List<Images> listaImagenes = DaoImages.getListaImages();
-
         Log.d("listaImagenes.size(): ", listaImagenes.size()+"");
         for(int i=0; i<listaImagenes.size(); i++){
             Images images = listaImagenes.get(i);

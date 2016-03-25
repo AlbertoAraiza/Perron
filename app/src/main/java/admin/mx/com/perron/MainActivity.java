@@ -308,14 +308,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             json.put("coordenadas", edtCoordenadas.getText());
             if(option == Constants.ACTUALIZAR){
                 json.put("idNegocio", negociosImage.getIdNegocio());
-                ImageEncode imgEncode = new ImageEncode(realPath);
-                String imagen = imgEncode.getEncodedString(thumbnail);
-                json.put("logotipo", imagen);
-            }else{
-                ImageEncode imgEncode = new ImageEncode(realPath);
-                String imagen = imgEncode.getEncodedString();
-                json.put("logotipo", imagen);
             }
+
+            String imagen = Utils.getEncodedString(thumbnail);
+            json.put("logotipo", imagen);
 
         } catch (JSONException e) {
             System.out.println("******************************************************************************ERROR ON JSONOBject: " + getStackTrace(e) + "******************************************************************************ERROR ON JSONOBject: ");

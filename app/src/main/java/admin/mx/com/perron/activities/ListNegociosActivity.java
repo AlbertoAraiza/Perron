@@ -15,6 +15,8 @@ import admin.mx.com.perron.utils.Utils;
 public class ListNegociosActivity extends AdministracionMain{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
         try {
             setContentView(R.layout.list_negocios);

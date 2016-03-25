@@ -12,18 +12,11 @@ import java.io.ByteArrayOutputStream;
  * Created by jorge on 2/21/2016.
  */
 public class ImageEncode {
-
-    private String imgPath;
-
-    public ImageEncode( String imgPath) {
-        this.imgPath = imgPath;
-    }
-
     public String getEncodedString() {
         BitmapFactory.Options options = null;
         options = new BitmapFactory.Options();
         options.inSampleSize = 3;
-        Bitmap bitmap = BitmapFactory.decodeFile(imgPath, options);
+        Bitmap bitmap = BitmapFactory.decodeFile("imgPath", options);
         bitmap = Bitmap.createScaledBitmap(bitmap,(int)(bitmap.getWidth()*0.5), (int)(bitmap.getHeight()*0.5), true);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         // Must compress the Image to reduce image size to make upload easy
@@ -37,7 +30,7 @@ public class ImageEncode {
         BitmapFactory.Options options = null;
         options = new BitmapFactory.Options();
         options.inSampleSize = 3;
-        Bitmap bitmap = BitmapFactory.decodeFile(imgPath, options);
+        Bitmap bitmap = BitmapFactory.decodeFile("imgPath", options);
         bitmap = Bitmap.createScaledBitmap(bitmap,(int)(bitmap.getWidth()*0.5), (int)(bitmap.getHeight()*0.5), true);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         // Must compress the Image to reduce image size to make upload easy
@@ -46,7 +39,7 @@ public class ImageEncode {
 
         return byte_arr;
     }
-    public String getEncodedString(Bitmap bitmap) {
+    /*public static String getEncodedString(Bitmap bitmap) {
         bitmap = Bitmap.createScaledBitmap(bitmap,(int)(bitmap.getWidth()*0.5), (int)(bitmap.getHeight()*0.5), true);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         // Must compress the Image to reduce image size to make upload easy
@@ -55,6 +48,6 @@ public class ImageEncode {
         // Encode Image to String
         String encodedString = Base64.encodeToString(byte_arr, 0);
         return encodedString;
-    }
+    }*/
 
 }

@@ -51,8 +51,9 @@ public class ListArticulosActivity extends AdministracionMain implements View.On
             LinearLayoutManager llm = new LinearLayoutManager(this);
             llm.setOrientation(LinearLayoutManager.VERTICAL);
             recList.setLayoutManager(llm);
-            DaoArticulo daoArticulo = new DaoArticulo();
-            listaArticulo = daoArticulo.getListaArticulo();
+            DaoArticulo daoArticulo = new DaoArticulo(getApplicationContext(), Constants.LISTAR_ARTICULOS);
+            daoArticulo.getListaArticulo();
+            listaArticulo =  MyProperties.getInstance().listaArticulos;
             adapter = new ArticuloAdapter(listaArticulo, getApplicationContext());
             recList.setAdapter(adapter);
         }catch(Exception e){
@@ -79,6 +80,7 @@ public class ListArticulosActivity extends AdministracionMain implements View.On
         if(v==btnAddItem){
             Intent intent = new Intent(this, AgregarArticuloActivity.class);
             intent.putExtra("action",Constants.NEW_ITEM);
+            intent.putExtra("idNegocio", negociosImage.getIdNegocio());
             startActivity(intent);
         }
 

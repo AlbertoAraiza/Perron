@@ -1,7 +1,9 @@
 package admin.mx.com.perron.utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import admin.mx.com.perron.entities.Articulo;
 import admin.mx.com.perron.entities.NegociosImage;
 
 /**
@@ -9,7 +11,7 @@ import admin.mx.com.perron.entities.NegociosImage;
  */
 public class MyProperties {
     private static MyProperties mInstance= null;
-
+    public List<Articulo> listaArticulos;
     public List<NegociosImage> listaNegocios;
     protected MyProperties(){}
     public static synchronized MyProperties getInstance(){

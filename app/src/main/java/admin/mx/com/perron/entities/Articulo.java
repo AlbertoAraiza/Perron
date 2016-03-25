@@ -1,20 +1,21 @@
 package admin.mx.com.perron.entities;
-
 import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
-
 /**
  * Created by jorge on 3/15/2016.
  */
 public class Articulo implements Parcelable{
+    public Articulo() {
+    }
     private int idArticulo;
     private String nombreArticulo;
     private double precio;
     private String descripcion;
     private int idNegocio;
-    private byte[] image;
+    private byte[] imagen;
     private Bitmap imageBitmap;
+    private String imageCode;
 
     protected Articulo(Parcel in) {
         idArticulo = in.readInt();
@@ -22,13 +23,11 @@ public class Articulo implements Parcelable{
         precio = in.readDouble();
         descripcion = in.readString();
         idNegocio = in.readInt();
-        image = in.createByteArray();
+        imagen = in.createByteArray();
         imageBitmap = in.readParcelable(Bitmap.class.getClassLoader());
+        imageCode = in.readString();
     }
 
-    public Articulo() {
-
-    }
     public static final Creator<Articulo> CREATOR = new Creator<Articulo>() {
         @Override
         public Articulo createFromParcel(Parcel in) {
@@ -40,6 +39,11 @@ public class Articulo implements Parcelable{
             return new Articulo[size];
         }
     };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
     public int getIdArticulo() {
         return idArticulo;
@@ -81,12 +85,12 @@ public class Articulo implements Parcelable{
         this.idNegocio = idNegocio;
     }
 
-    public byte[] getImage() {
-        return image;
+    public byte[] getImagen() {
+        return imagen;
     }
 
-    public void setImage(byte[] image) {
-        this.image = image;
+    public void setImagen(byte[] imagen) {
+        this.imagen = imagen;
     }
 
     public Bitmap getImageBitmap() {
@@ -97,14 +101,12 @@ public class Articulo implements Parcelable{
         this.imageBitmap = imageBitmap;
     }
 
-    @Override
-    public String toString(){
-        return this.nombreArticulo+", $"+this.precio+", "+this.descripcion;
+    public String getImageCode() {
+        return imageCode;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public void setImageCode(String imageCode) {
+        this.imageCode = imageCode;
     }
 
     @Override
@@ -114,7 +116,8 @@ public class Articulo implements Parcelable{
         dest.writeDouble(precio);
         dest.writeString(descripcion);
         dest.writeInt(idNegocio);
-        dest.writeByteArray(image);
+        dest.writeByteArray(imagen);
         dest.writeParcelable(imageBitmap, flags);
+        dest.writeString(imageCode);
     }
 }
