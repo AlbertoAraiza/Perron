@@ -13,10 +13,14 @@ import admin.mx.com.perron.utils.Utils;
  * Created by Jorge on 07/feb/2016.
  */
 public class ListNegociosActivity extends AdministracionMain{
+
+
+    public ListNegociosActivity() {
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-
         super.onCreate(savedInstanceState);
         try {
             setContentView(R.layout.list_negocios);

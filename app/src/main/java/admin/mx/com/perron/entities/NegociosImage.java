@@ -86,4 +86,17 @@ public class NegociosImage implements Parcelable {
     public void setLogotipo(Bitmap logotipo) {
         this.logotipo = logotipo;
     }
+
+    @Override
+    public String toString() {
+        StringBuffer str = new StringBuffer("idNegocio: ");
+        str.append(idNegocio);
+        str.append(", nombreNegocio: ");
+        str.append(nombreNegocio);
+        str.append(", direccion: ");
+        str.append(direccion);
+        str.append(", coordenadas: ");
+        str.append(coordenadas);
+        return str.toString();
+    }
 }

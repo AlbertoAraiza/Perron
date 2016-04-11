@@ -11,6 +11,8 @@ public interface Constants {
     public static final int GUARDAR_ARTICULO = 3;
     public static final int GUARDAR_IMAGEN = 4;
     public static final int LISTAR_ARTICULOS = 5;
+    public static final int LISTAR_IMAGENES = 6;
+    public static final int ACTUALIZAR_ARTICULO = 7;
     public static final String URL_BASE ="http://192.168.1.222:8080/publicidad2/rest/v1/status/";
     public static final String SAVE_METHOD = "post";
     public static final String UPDATE_METHOD = "update";
@@ -25,5 +27,7 @@ public interface Constants {
     public static final String UPDATE_ITEMS = "updateItem";
     public static final String GET_IMAGES = "getImages";
     public static final String GET_ARTICULOS = "getArticulos";
+    public static final int LISTA_VACIA = 1;
+    public static final int LISTA_LLENA = 2;
 }
 

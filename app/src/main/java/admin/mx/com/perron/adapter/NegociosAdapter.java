@@ -12,20 +12,22 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.squareup.otto.Subscribe;
 
 import java.util.List;
 import admin.mx.com.perron.MainActivity;
 import admin.mx.com.perron.R;
 import admin.mx.com.perron.activities.ListArticulosActivity;
-import admin.mx.com.perron.activities.MenuMain;
-import admin.mx.com.perron.entities.Negocios;
+import admin.mx.com.perron.dao.DaoArticulo;
+import admin.mx.com.perron.entities.Articulo;
 import admin.mx.com.perron.entities.NegociosImage;
 import admin.mx.com.perron.logic.DeleteArticulo;
 import admin.mx.com.perron.utils.Constants;
+import admin.mx.com.perron.utils.MyProperties;
 import admin.mx.com.perron.utils.Utils;
 
 /**
@@ -37,9 +39,12 @@ public class NegociosAdapter extends RecyclerView.Adapter<NegociosAdapter.Negoci
     private ContextMenu.ContextMenuInfo mContextMenuInfo = null;
     public static final int DELETE_RECORD = 0;
     public static final int UPDATE_RECORD = 1;
+    int position;
     public NegociosAdapter(List<NegociosImage> negociosList, Context mContext) {
+        super();
         this.negociosList = negociosList;
         this.mContext = mContext;
+        Utils.getBus().register(this);
     }
     @Override
     public NegocioViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
@@ -140,11 +145,21 @@ public class NegociosAdapter extends RecyclerView.Adapter<NegociosAdapter.Negoci
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
                     try {
-                        int position = getLayoutPosition();
+                        position = getLayoutPosition();
                         Log.d(Constants.appName, "position");
                         Toast.makeText(v.getContext(), " agregar articulo!! ", Toast.LENGTH_SHORT).show();
-                        callArticulo(position);
-
+                        Articulo art = new Articulo();
+                        NegociosImage negociosImage = (NegociosImage)MyProperties.getInstance().listaNegocios.get(position);
+                        Log.d(Constants.appName, negociosImage.toString());
+                        int idNegocio = negociosImage.getIdNegocio().intValue();
+                        art.setIdArticulo(idNegocio);
+                        art.setPrecio(123);
+                        art.setDescripcion("descripcion");
+                        art.setNombreArticulo("nombre");
+                        art.setIdNegocio(idNegocio);
+                        art.setImageCode("imagen");
+                        DaoArticulo daoArticulo = new DaoArticulo( getmContext(), Constants.LISTAR_ARTICULOS);
+                        daoArticulo.getListaArticulo(art);
                     } catch (Exception e) {
                         Log.d("Error:NegociosAdapter: ", Utils.getStackTrace(e));
                     }
@@ -177,11 +192,15 @@ public class NegociosAdapter extends RecyclerView.Adapter<NegociosAdapter.Negoci
     public void setmContext(Context mContext) {
         this.mContext = mContext;
     }
-    public void callArticulo(int position){
+
+    @Subscribe
+    public void callArticulo(String nada){
+
         Intent intent = new Intent(getmContext(), ListArticulosActivity.class);
         intent.putExtra("position", position);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         getmContext().startActivity(intent);
+
     }
 
 }

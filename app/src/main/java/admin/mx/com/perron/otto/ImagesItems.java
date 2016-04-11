@@ -1,17 +1,15 @@
-package admin.mx.com.perron.entities;
+package admin.mx.com.perron.otto;
 
-import android.graphics.Bitmap;
+import admin.mx.com.perron.entities.Articulo;
 
 /**
- * Created by jorge on 3/19/2016.
+ * Created by jorge on 4/2/2016.
  */
-public class Images {
+public class ImagesItems {
     private int idArticulo;
     private int idImagen;
     private byte[] imagen;
-    private Bitmap imageBitmap;
-    private String imagenString;
-
+    private Articulo articulo;
     public int getIdArticulo() {
         return idArticulo;
     }
@@ -36,19 +34,11 @@ public class Images {
         this.imagen = imagen;
     }
 
-    public Bitmap getImageBitmap() {
-        return imageBitmap;
+    public Articulo getArticulo() {
+        return articulo;
     }
 
-    public void setImageBitmap(Bitmap imageBitmap) {
-        this.imageBitmap = imageBitmap;
-    }
-
-    public String getImagenString() {
-        return imagenString;
-    }
-
-    public void setImagenString(String imagenString) {
-        this.imagenString = imagenString;
+    public void setArticulo(Articulo articulo) {
+        this.articulo = articulo;
     }
 }

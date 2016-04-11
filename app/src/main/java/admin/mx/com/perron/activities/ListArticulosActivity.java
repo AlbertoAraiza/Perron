@@ -1,6 +1,7 @@
 package admin.mx.com.perron.activities;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -8,12 +9,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.otto.Subscribe;
+
 import java.util.List;
 import admin.mx.com.perron.R;
 import admin.mx.com.perron.adapter.ArticuloAdapter;
 import admin.mx.com.perron.dao.DaoArticulo;
+import admin.mx.com.perron.dao.DatabaseObject;
 import admin.mx.com.perron.entities.Articulo;
 import admin.mx.com.perron.entities.NegociosImage;
+import admin.mx.com.perron.otto.ImagesItems;
 import admin.mx.com.perron.utils.Constants;
 import admin.mx.com.perron.utils.MyProperties;
 import admin.mx.com.perron.utils.Utils;
@@ -32,7 +38,7 @@ public class ListArticulosActivity extends AdministracionMain implements View.On
     private ArticuloAdapter adapter;
     private Button btnAddItem;
     public ListArticulosActivity() {
-
+        super();
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +57,6 @@ public class ListArticulosActivity extends AdministracionMain implements View.On
             LinearLayoutManager llm = new LinearLayoutManager(this);
             llm.setOrientation(LinearLayoutManager.VERTICAL);
             recList.setLayoutManager(llm);
-            DaoArticulo daoArticulo = new DaoArticulo(getApplicationContext(), Constants.LISTAR_ARTICULOS);
-            daoArticulo.getListaArticulo();
             listaArticulo =  MyProperties.getInstance().listaArticulos;
             adapter = new ArticuloAdapter(listaArticulo, getApplicationContext());
             recList.setAdapter(adapter);
@@ -83,6 +87,8 @@ public class ListArticulosActivity extends AdministracionMain implements View.On
             intent.putExtra("idNegocio", negociosImage.getIdNegocio());
             startActivity(intent);
         }
-
     }
+
+
+
 }

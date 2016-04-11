@@ -15,23 +15,20 @@ public class DaoArticulo {
     private Context ctx;
     private int op;
     private AgregarArticuloActivity agregarArticuloActivity;
-    public DaoArticulo(Context ctx, int op, AgregarArticuloActivity agregarArticuloActivity) {
-        this.ctx = ctx;
-        this.op = op;
-        this.agregarArticuloActivity = agregarArticuloActivity;
-    }
     public DaoArticulo(Context ctx, int op) {
         this.ctx = ctx;
         this.op = op;
     }
-    public List<Articulo> getListaArticulo(){
-        List<Articulo> listaArticulo = null;
-        DatabaseObject dao = new DatabaseObject(ctx, op);
+    public void getListaArticulo(Articulo art){
+        DatabaseObject dao = new DatabaseObject(ctx,art, op);
         dao.execute();
-        return listaArticulo;
     }
     public void saveArticulo(Articulo articulo){
         DatabaseObject dao = new DatabaseObject(ctx, agregarArticuloActivity, articulo, op);
+        dao.execute();
+    }
+    public void actualizarArticulo(Articulo articulo){
+        DatabaseObject dao = new DatabaseObject(ctx, articulo, op);
         dao.execute();
     }
 

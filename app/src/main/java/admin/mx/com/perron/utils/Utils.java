@@ -5,9 +5,12 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.ImageView;
 
 import com.google.gson.Gson;
+import com.squareup.otto.Bus;
 
 import org.apache.commons.codec.binary.Base64;
 
@@ -15,6 +18,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
@@ -23,11 +28,12 @@ import admin.mx.com.perron.entities.Negocios;
 import admin.mx.com.perron.entities.NegociosImage;
 
 public class Utils {
+    private static Bus bus;
+
     public Utils(){
 
     }
     private static StringBuffer globalMessage = new StringBuffer("");
-
     public static void showMessage(Context context, final AppCompatActivity nuevaClase, String text ){
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
@@ -160,6 +166,8 @@ public class Utils {
         return resizedBitmap;
     }
     public static String getEncodedString(Bitmap bitmap) {
+
+
         bitmap = Bitmap.createScaledBitmap(bitmap,(int)(bitmap.getWidth()*0.5), (int)(bitmap.getHeight()*0.5), true);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         // Must compress the Image to reduce image size to make upload easy
@@ -170,5 +178,23 @@ public class Utils {
         return encodedString;
     }
 
-
+    public static Bus getBus() {
+        if(bus==null){
+            bus = new Bus();
+        }
+        return bus;
+    }
+    public static Bitmap getBitmapFromImageView(ImageView imageView){
+        BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
+        Bitmap bitmap = drawable.getBitmap();
+        return bitmap;
+    }
+    public static byte[] stringToBytesUTFNIO(String str) {
+        char[] buffer = str.toCharArray();
+        byte[] b = new byte[buffer.length << 1];
+        CharBuffer cBuffer = ByteBuffer.wrap(b).asCharBuffer();
+        for(int i = 0; i < buffer.length; i++)
+        cBuffer.put(buffer[i]);
+        return b;
+    }
 }

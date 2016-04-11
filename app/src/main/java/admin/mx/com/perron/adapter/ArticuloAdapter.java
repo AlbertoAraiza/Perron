@@ -1,5 +1,4 @@
 package admin.mx.com.perron.adapter;
-
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -8,6 +7,7 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -16,23 +16,27 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.squareup.otto.Subscribe;
 import java.util.List;
-
 import admin.mx.com.perron.R;
 import admin.mx.com.perron.activities.AgregarArticuloActivity;
 import admin.mx.com.perron.activities.ListArticulosActivity;
+import admin.mx.com.perron.dao.DatabaseObject;
 import admin.mx.com.perron.entities.Articulo;
+import admin.mx.com.perron.otto.ImagesItems;
+import admin.mx.com.perron.otto.Items;
 import admin.mx.com.perron.utils.Constants;
-
+import admin.mx.com.perron.utils.MyProperties;
+import admin.mx.com.perron.utils.Utils;
 /**
  * Created by jorge on 3/16/2016.
  */
 public class ArticuloAdapter extends RecyclerView.Adapter<ArticuloAdapter.MyViewHolder> {
-
     private List<Articulo> articuloList;
     private Context mContext;
+    private int position;
     public ArticuloAdapter(List<Articulo> articuloList, Context mContext) {
+        super();
         this.articuloList = articuloList;
         this.mContext = mContext;
     }
@@ -42,15 +46,17 @@ public class ArticuloAdapter extends RecyclerView.Adapter<ArticuloAdapter.MyView
         public ImageView imageViewer;
         public MyViewHolder(View view) {
             super(view);
-            idArticulo = (TextView) view.findViewById(R.id.id_articulo_row);
-            nombreArticulo = (TextView) view.findViewById(R.id.nombre_articulo_row);
-            precio = (TextView) view.findViewById(R.id.precio_row);
-            descripcion = (TextView) view.findViewById(R.id.descripcion_row);
-            idNegocio = (TextView) view.findViewById(R.id.id_negocio_row);
-            imageViewer = (ImageView)view.findViewById(R.id.image_row);
-            view.setOnClickListener(this);
-            view.setOnLongClickListener(this);
-            view.setOnCreateContextMenuListener(this);
+            if (MyProperties.getInstance().listaValor == Constants.LISTA_LLENA) {
+                idArticulo = (TextView) view.findViewById(R.id.id_articulo_row);
+                nombreArticulo = (TextView) view.findViewById(R.id.nombre_articulo_row);
+                precio = (TextView) view.findViewById(R.id.precio_row);
+                descripcion = (TextView) view.findViewById(R.id.descripcion_row);
+                idNegocio = (TextView) view.findViewById(R.id.id_negocio_row);
+                imageViewer = (ImageView) view.findViewById(R.id.image_row);
+                view.setOnClickListener(this);
+                view.setOnLongClickListener(this);
+                view.setOnCreateContextMenuListener(this);
+            }
         }
         @Override
         public void onCreateContextMenu(ContextMenu menu, final View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -59,9 +65,11 @@ public class ArticuloAdapter extends RecyclerView.Adapter<ArticuloAdapter.MyView
                 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
-                    int position = getLayoutPosition();
-                    Toast.makeText(v.getContext(), " edit item!! ", Toast.LENGTH_SHORT).show();
-                    callArticulo(position);
+                    position = getLayoutPosition();
+                    Articulo articulo = (Articulo) getArticuloList().get(position);
+                    Log.d(Constants.appName, "Articulo a actualizar: "+articulo.toString());
+                    DatabaseObject dao = new DatabaseObject(v.getContext(),articulo,  Constants.LISTAR_IMAGENES);
+                    dao.execute();
                     return true;
                 }
             });
@@ -69,7 +77,9 @@ public class ArticuloAdapter extends RecyclerView.Adapter<ArticuloAdapter.MyView
 
         @Override
         public boolean onLongClick(View v) {
-            v.setOnCreateContextMenuListener(this);
+            if (MyProperties.getInstance().listaValor == Constants.LISTA_LLENA) {
+                v.setOnCreateContextMenuListener(this);
+            }
             return false;
         }
         @Override
@@ -83,36 +93,48 @@ public class ArticuloAdapter extends RecyclerView.Adapter<ArticuloAdapter.MyView
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
+        View itemView;
+        if (viewType == EMPTY_VIEW) {
+            itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.list_empty, parent, false);
+        }else{
+            itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.articulos_list_row, parent, false);
-
+        }
         return new MyViewHolder(itemView);
     }
 
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        Articulo articulo = articuloList.get(position);
-        holder.idArticulo.setText(articulo.getIdArticulo()+"");
-        holder.nombreArticulo.setText(articulo.getNombreArticulo());
-        holder.precio.setText(articulo.getPrecio()+"");
-        holder.descripcion.setText(articulo.getDescripcion());
-        holder.idNegocio.setText(articulo.getIdNegocio()+"");
-        holder.imageViewer.setImageBitmap(articulo.getImageBitmap());
+        if (!(MyProperties.getInstance().listaValor == Constants.LISTA_VACIA)) {
+            Articulo articulo = articuloList.get(position);
+            holder.idArticulo.setText(articulo.getIdArticulo() + "");
+            holder.nombreArticulo.setText(articulo.getNombreArticulo());
+            holder.precio.setText(articulo.getPrecio() + "");
+            holder.descripcion.setText(articulo.getDescripcion());
+            holder.idNegocio.setText(articulo.getIdNegocio() + "");
+            holder.imageViewer.setImageBitmap(articulo.getImageBitmap());
+        }
     }
 
     @Override
     public int getItemCount() {
-        return articuloList.size();
-    }
-    public void callArticulo(int position){
-        Intent intent = new Intent(getmContext(), AgregarArticuloActivity.class);
-        intent.putExtra("action", Constants.UPDATE_ITEM);
-        intent.putExtra("articulo", (Parcelable) getArticuloList().get(position));
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        getmContext().startActivity(intent);
+        if( MyProperties.getInstance().listaValor == Constants.LISTA_VACIA){
+            return Constants.LISTA_VACIA;
+        }else {
+            return articuloList.size();
+        }
     }
 
+
+    @Override
+    public int getItemViewType(int position) {
+        if (MyProperties.getInstance().listaValor == Constants.LISTA_VACIA) {
+            return EMPTY_VIEW;
+        }
+        return super.getItemViewType(position);
+    }
     public Context getmContext() {
         return mContext;
     }
@@ -120,7 +142,6 @@ public class ArticuloAdapter extends RecyclerView.Adapter<ArticuloAdapter.MyView
     public void setmContext(Context mContext) {
         this.mContext = mContext;
     }
-
     public List<Articulo> getArticuloList() {
         return articuloList;
     }
@@ -128,4 +149,9 @@ public class ArticuloAdapter extends RecyclerView.Adapter<ArticuloAdapter.MyView
     public void setArticuloList(List<Articulo> articuloList) {
         this.articuloList = articuloList;
     }
+    private static final int EMPTY_VIEW = 10;
+
+
+
+
 }

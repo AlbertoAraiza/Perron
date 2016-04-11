@@ -120,4 +120,18 @@ public class Articulo implements Parcelable{
         dest.writeParcelable(imageBitmap, flags);
         dest.writeString(imageCode);
     }
+    @Override
+    public String toString() {
+        StringBuffer stringBuffer = new StringBuffer("idNegocio: ");
+        stringBuffer.append(getIdNegocio());
+        stringBuffer.append("\n, nombreArticulo: ");
+        stringBuffer.append(getNombreArticulo());
+        stringBuffer.append("\n, precio: ");
+        stringBuffer.append(getPrecio());
+        stringBuffer.append("\n, descripcion: ");
+        stringBuffer.append(getDescripcion());
+        stringBuffer.append("\n, idArticulo: ");
+        stringBuffer.append(getIdArticulo());
+        return stringBuffer.toString();
+    }
 }

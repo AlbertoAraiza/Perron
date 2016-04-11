@@ -14,10 +14,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import admin.mx.com.perron.MainActivity;
 import admin.mx.com.perron.R;
 import admin.mx.com.perron.entities.Negocios;
@@ -26,12 +24,10 @@ import admin.mx.com.perron.logic.ListaResultado;
 import admin.mx.com.perron.utils.Constants;
 import admin.mx.com.perron.utils.MyProperties;
 import admin.mx.com.perron.utils.Utils;
-
 /**
  * Created by Jorge on 07/feb/2016.
  */
 public class MenuMain extends AdministracionMain implements View.OnClickListener{
-
     EditText edtNombreNegocio;
     EditText edtDireccion;
     EditText edtCoordenadas;
