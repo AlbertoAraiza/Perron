@@ -16,6 +16,7 @@ public class MyProperties {
     public List<NegociosImage> listaNegocios;
     public String listaImages;
     public int listaValor;
+    public Articulo articulo;
     protected MyProperties(){}
     public static synchronized MyProperties getInstance(){
         if(null == mInstance){

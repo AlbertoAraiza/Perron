@@ -126,18 +126,13 @@ public class DatabaseObject extends AsyncTask {
         super.onPostExecute(o);
     }
     public void executeRequestJson2(String url) throws Exception{
-
         JsonObjectRequest jsonObjReq =
                 new JsonObjectRequest(Request.Method.POST,
                         url, jsonObject.toString(), new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
-
                         String input = response.toString();
-                        if(op == Constants.GUARDAR_ARTICULO){
-                            Utils.getBus().post(new Article());
-                        }
                     }
                 }, new Response.ErrorListener() {
 
@@ -384,15 +379,13 @@ public class DatabaseObject extends AsyncTask {
         }
         MyProperties.getInstance().listaImagenes = listaTemporal;
         ImagesItems imgs = new ImagesItems();
-        imgs.setArticulo(this.articulo);
-        callUpdateArticulo(imgs);
+        MyProperties.getInstance().articulo = this.articulo;
+        callUpdateArticulo();
     }
-    public void callUpdateArticulo(ImagesItems items){
+    public void callUpdateArticulo(){
         Intent intent = new Intent(this.ctx, AgregarArticuloActivity.class);
         intent.putExtra("action", Constants.UPDATE_ITEM);
-        intent.putExtra("articulo", items.getArticulo());
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        Log.d(Constants.appName, "UPDATE_ITEM : " + items.getArticulo().toString());
         this.ctx.startActivity(intent);
     }
 

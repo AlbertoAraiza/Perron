@@ -23,6 +23,8 @@ public interface Constants {
     public static final int NEW_ITEM = 99;
     public static final int UPDATE_ITEM = 100;
     /*Nombres de los metodos que se llaman desde la invocacion de los webservices*/
+    public static final String UPDATE_IMAGES_ITEM = "updateImageItem";
+    public static final String DELETE_IMAGES_ITEM = "deleteImageItem";
     public static final String UPDATE_IMAGES = "updateImages";
     public static final String UPDATE_ITEMS = "updateItem";
     public static final String GET_IMAGES = "getImages";

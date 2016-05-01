@@ -1,5 +1,6 @@
 package admin.mx.com.perron.dao;
 import android.content.Context;
+import android.os.AsyncTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,10 +9,10 @@ import admin.mx.com.perron.activities.AgregarArticuloActivity;
 import admin.mx.com.perron.entities.Articulo;
 import admin.mx.com.perron.utils.MyProperties;
 
-public class DaoArticulo {
+public class DaoArticulo  {
+
     public DaoArticulo() {
     }
-
     private Context ctx;
     private int op;
     private AgregarArticuloActivity agregarArticuloActivity;
@@ -19,6 +20,7 @@ public class DaoArticulo {
         this.ctx = ctx;
         this.op = op;
     }
+
     public void getListaArticulo(Articulo art){
         DatabaseObject dao = new DatabaseObject(ctx,art, op);
         dao.execute();

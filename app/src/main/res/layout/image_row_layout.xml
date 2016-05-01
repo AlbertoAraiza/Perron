@@ -7,8 +7,10 @@
     android:layout_marginTop="12dp">
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="60dp"
+        android:scaleType="fitXY"
+        android:adjustViewBounds="true"
         android:id="@+id/id_image_update_articulo"
         android:layout_centerHorizontal="true"
         android:layout_alignParentLeft="true"
