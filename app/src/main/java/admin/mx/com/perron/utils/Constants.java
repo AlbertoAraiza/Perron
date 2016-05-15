@@ -13,7 +13,8 @@ public interface Constants {
     public static final int LISTAR_ARTICULOS = 5;
     public static final int LISTAR_IMAGENES = 6;
     public static final int ACTUALIZAR_ARTICULO = 7;
-    public static final String URL_BASE ="http://192.168.1.222:8080/publicidad2/rest/v1/status/";
+    //public static final String URL_BASE ="http://192.168.1.222:8080/publicidad2/rest/v1/status/";
+    public static final String URL_BASE ="http://puntodeventa-aguascalientes.rhcloud.com/mobile/rest/v1/status/";
     public static final String SAVE_METHOD = "post";
     public static final String UPDATE_METHOD = "update";
     public static final String DELETE_METHOD = "delete";

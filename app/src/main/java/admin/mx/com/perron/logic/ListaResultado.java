@@ -4,9 +4,13 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -88,6 +92,15 @@ public class ListaResultado extends AsyncTask {
             public void onErrorResponse(VolleyError error) {
                 Log.d(Constants.appName, "VolleyError : "+Utils.getStackTrace(error));
                 System.out.println("ERROR ON onErrorResponse: "+Utils.getStackTrace(error));
+                NetworkResponse response = error.networkResponse;
+                if(response != null && response.data != null){
+                    Toast.makeText(ma, "errorMessage:" + response.statusCode, Toast.LENGTH_SHORT).show();
+                }else{
+                    String errorMessage=error.getClass().getSimpleName();
+                    if(!TextUtils.isEmpty(errorMessage)){
+                        Toast.makeText(ma,"errorMessage:"+errorMessage, Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         });
         stringReq.setRetryPolicy(new DefaultRetryPolicy(
@@ -118,14 +131,15 @@ public class ListaResultado extends AsyncTask {
             NegociosImage2 neg = (NegociosImage2)listaNegocios.get(i);
 
             Bitmap bitmap = null;
-            try {
+            /*try {
 
                 Log.d(Constants.appName, "neg.getLogotipo() : "+neg.getLogotipo());
                 bitmap = BitmapFactory.decodeByteArray(neg.getImage(), 0, neg.getImage().length);
             } catch(Exception e){
                 e.printStackTrace();
                 bitmap = BitmapFactory.decodeResource(ctx.getResources(), R.mipmap.ic_launcher);
-            }
+            }*/
+            bitmap = BitmapFactory.decodeResource(ctx.getResources(), R.mipmap.ic_launcher);
             NegociosImage negociosImage;
             negociosImage = new NegociosImage();
             negociosImage.setCoordenadas(neg.getCoordenadas());
