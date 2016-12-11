@@ -19,7 +19,6 @@ import java.util.List;
 import admin.mx.com.perron.MainActivity;
 import admin.mx.com.perron.R;
 import admin.mx.com.perron.entities.Negocios;
-import admin.mx.com.perron.entities.NegociosImage;
 import admin.mx.com.perron.logic.ListaResultado;
 import admin.mx.com.perron.utils.Constants;
 import admin.mx.com.perron.utils.MyProperties;
@@ -97,7 +96,7 @@ public class MenuMain extends AdministracionMain implements View.OnClickListener
         }
     }
     //public void loadListNegocios(){
-    public void loadListNegocios(List<NegociosImage> listaNegocios){
+    public void loadListNegocios(List<Negocios> listaNegocios){
         try {
             Log.d(Constants.appName, "return from webservice");
             Intent intent = new Intent(this, ListNegociosActivity.class);

@@ -18,7 +18,7 @@ import admin.mx.com.perron.adapter.ArticuloAdapter;
 import admin.mx.com.perron.dao.DaoArticulo;
 import admin.mx.com.perron.dao.DatabaseObject;
 import admin.mx.com.perron.entities.Articulo;
-import admin.mx.com.perron.entities.NegociosImage;
+import admin.mx.com.perron.entities.Negocios;
 import admin.mx.com.perron.otto.ImagesItems;
 import admin.mx.com.perron.utils.Constants;
 import admin.mx.com.perron.utils.MyProperties;
@@ -27,7 +27,7 @@ import admin.mx.com.perron.utils.Utils;
  * Created by jorge on 3/13/2016.
  */
 public class ListArticulosActivity extends AdministracionMain implements View.OnClickListener{
-    NegociosImage negociosImage;
+    Negocios negociosImage;
     ImageView imageNegocio;
     TextView idNegocio;
     TextView nombreNegocio;
@@ -45,7 +45,7 @@ public class ListArticulosActivity extends AdministracionMain implements View.On
         super.onCreate(savedInstanceState);
         try {
             setContentView(R.layout.articulos_activity);
-            List<NegociosImage> listaNegocios = MyProperties.getInstance().listaNegocios;
+            List<Negocios> listaNegocios = MyProperties.getInstance().listaNegocios;
             Bundle extras =  getIntent().getExtras();
             if(extras!=null) {
                 int position = extras.getInt("position");
@@ -71,7 +71,6 @@ public class ListArticulosActivity extends AdministracionMain implements View.On
         direccion = (TextView) findViewById(R.id.direccion_articulos_activity);
         coordenadas = (TextView) findViewById(R.id.coordenadas_articulos_activity);
         btnAddItem = (Button)findViewById(R.id.btn_add_item);
-        imageNegocio.setImageBitmap(negociosImage.getLogotipo());
         idNegocio.setText(negociosImage.getIdNegocio() + "");
         nombreNegocio.setText(negociosImage.getNombreNegocio());
         direccion.setText(negociosImage.getDireccion());

@@ -1,17 +1,18 @@
 package admin.mx.com.perron;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Intent;
-import android.database.Cursor;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -25,22 +26,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import org.apache.commons.codec.binary.Base64;
+import android.widget.Toast;
+import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.List;
-
 import admin.mx.com.perron.entities.Negocios;
-import admin.mx.com.perron.entities.NegociosImage;
-import admin.mx.com.perron.logic.ImageEncode;
 import admin.mx.com.perron.logic.RealPathUtil;
+import admin.mx.com.perron.utils.CheckPermission;
 import admin.mx.com.perron.utils.Constants;
 import admin.mx.com.perron.utils.CropSquareTransformation;
 import admin.mx.com.perron.utils.GPSTracker;
@@ -66,12 +64,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ImageView imgView;
     String realPath;
     private int option = 999;
-    private NegociosImage negociosImage;
+    private Negocios negociosImage;
     private GPSTracker gps;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (Build.VERSION.SDK_INT >= 23) {
+            if(CheckPermission.checkPermissionForGPS(this)){
+                onCreate2();
+            }else{
+                CheckPermission.requestPermissionForGPS(this);
+            }
+        } else {
+            onCreate2();
+        }
+    }
+
+    public void onCreate2(){
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -85,16 +96,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 TextView textTitulo = (TextView) findViewById(R.id.titulo);
                 textTitulo.setText("Modificar Negocio");
                 int position = extras.getInt("position");
-                List<NegociosImage> listaNegocios = MyProperties.getInstance().listaNegocios;
+                List<Negocios> listaNegocios = MyProperties.getInstance().listaNegocios;
                 negociosImage = listaNegocios.get(position);
                 setValues(negociosImage);
             }else if(option== Constants.CREAR){
-                    gps = new GPSTracker(getApplicationContext(), this);
-                    if(gps.getLocation()){
-                        edtCoordenadas.setText(gps.getLatitude()+","+gps.getLongitude());
-                    }else{
-                        edtCoordenadas.setText("");
-                    }
+                gps = new GPSTracker(getApplicationContext(), this);
+                if(gps.getLocation()){
+                    edtCoordenadas.setText(gps.getLatitude()+","+gps.getLongitude());
+                }else{
+                    edtCoordenadas.setText("");
+                }
             }
         }
     }
@@ -133,16 +144,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         WifiManager wm = (WifiManager) getSystemService(WIFI_SERVICE);
         String ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
         textIp = (TextView)findViewById(R.id.ip);
-        textIp.setText("IP address: "+ip);
+        textIp.setText("IP address new job: "+ip);
         btnLista = (Button)findViewById(R.id.btn_lista);
         btnLista.setOnClickListener(this);
     }
-    public void setValues(NegociosImage negociosImage) {
-        imgView.setImageBitmap(negociosImage.getLogotipo());
+    public void setValues(Negocios negociosImage) {
+        //imgView.setImageBitmap(negociosImage.getLogotipo());
         edtNombreNegocio.setText(negociosImage.getNombreNegocio());
         edtDireccion.setText(negociosImage.getDireccion());
         edtCoordenadas.setText(negociosImage.getCoordenadas());
-        thumbnail = negociosImage.getLogotipo();
+        //thumbnail = negociosImage.getLogotipo();
+        Picasso.with(getApplicationContext())
+                .load(negociosImage.getLogotipo())
+                .error(R.drawable.not_available)
+                .into(imgView);
     }
 
     public boolean validar(View view) {
@@ -320,5 +335,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return json;
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case CheckPermission.READ_GPS_PERMISSIONS_REQUEST:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show();
+                    onCreate2();
+                } else {
+                    Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
 }
 

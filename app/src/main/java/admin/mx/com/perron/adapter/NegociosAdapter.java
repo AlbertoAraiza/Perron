@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 import admin.mx.com.perron.MainActivity;
@@ -24,7 +25,7 @@ import admin.mx.com.perron.R;
 import admin.mx.com.perron.activities.ListArticulosActivity;
 import admin.mx.com.perron.dao.DaoArticulo;
 import admin.mx.com.perron.entities.Articulo;
-import admin.mx.com.perron.entities.NegociosImage;
+import admin.mx.com.perron.entities.Negocios;
 import admin.mx.com.perron.logic.DeleteArticulo;
 import admin.mx.com.perron.utils.Constants;
 import admin.mx.com.perron.utils.MyProperties;
@@ -34,17 +35,16 @@ import admin.mx.com.perron.utils.Utils;
  * Created by Jorge on 07/feb/2016.
  */
 public class NegociosAdapter extends RecyclerView.Adapter<NegociosAdapter.NegocioViewHolder>{
-    private List<NegociosImage> negociosList;
+    private List<Negocios> negociosList;
     private Context mContext;
     private ContextMenu.ContextMenuInfo mContextMenuInfo = null;
     public static final int DELETE_RECORD = 0;
     public static final int UPDATE_RECORD = 1;
     int position;
-    public NegociosAdapter(List<NegociosImage> negociosList, Context mContext) {
+    public NegociosAdapter(List<Negocios> negociosList, Context mContext) {
         super();
         this.negociosList = negociosList;
         this.mContext = mContext;
-        Utils.getBus().register(this);
     }
     @Override
     public NegocioViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
@@ -57,9 +57,11 @@ public class NegociosAdapter extends RecyclerView.Adapter<NegociosAdapter.Negoci
 
     @Override
     public void onBindViewHolder(NegocioViewHolder holder, int position) {
-        NegociosImage negocio = negociosList.get(position);
-        holder.vLogotipo.setImageBitmap(negocio.getLogotipo());
-        //Picasso.with(mContext).load("https://puntodeventa-aguascalientes.rhcloud.com/static/2121.jpg").into(holder.vLogotipo);
+        Negocios negocio = negociosList.get(position);
+        Picasso.with(mContext)
+                .load(negocio.getLogotipo())
+                .error(R.drawable.not_available)
+                .into(holder.vLogotipo);
         holder.vNombreNegocio.setText(negocio.getNombreNegocio());
         holder.vDireccion.setText(negocio.getDireccion());
         holder.vCoordenadas.setText(negocio.getCoordenadas());
@@ -120,7 +122,7 @@ public class NegociosAdapter extends RecyclerView.Adapter<NegociosAdapter.Negoci
                                 case DialogInterface.BUTTON_POSITIVE:
                                     //Yes button clicked
                                     int position = getLayoutPosition();
-                                    NegociosImage negociosImage = negociosList.get(position);
+                                    Negocios negociosImage = negociosList.get(position);
                                     negociosList.remove(position);
                                     notifyItemRemoved(position);
                                     Toast.makeText(v.getContext(), " Registro borrado!! " + negociosImage.getIdNegocio(), Toast.LENGTH_SHORT).show();
@@ -149,7 +151,7 @@ public class NegociosAdapter extends RecyclerView.Adapter<NegociosAdapter.Negoci
                         Log.d(Constants.appName, "position");
                         Toast.makeText(v.getContext(), " agregar articulo!! ", Toast.LENGTH_SHORT).show();
                         Articulo art = new Articulo();
-                        NegociosImage negociosImage = (NegociosImage)MyProperties.getInstance().listaNegocios.get(position);
+                        Negocios negociosImage = (Negocios)MyProperties.getInstance().listaNegocios.get(position);
                         Log.d(Constants.appName, negociosImage.toString());
                         int idNegocio = negociosImage.getIdNegocio().intValue();
                         art.setIdArticulo(idNegocio);
@@ -177,11 +179,11 @@ public class NegociosAdapter extends RecyclerView.Adapter<NegociosAdapter.Negoci
 
     }
 
-    public List<NegociosImage> getNegociosList() {
+    public List<Negocios> getNegociosList() {
         return negociosList;
     }
 
-    public void setNegociosList(List<NegociosImage> negociosList) {
+    public void setNegociosList(List<Negocios> negociosList) {
         this.negociosList = negociosList;
     }
 

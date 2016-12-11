@@ -3,10 +3,12 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.Toast;
+
 import java.util.List;
 import admin.mx.com.perron.R;
 import admin.mx.com.perron.adapter.NegociosAdapter;
-import admin.mx.com.perron.entities.NegociosImage;
+import admin.mx.com.perron.entities.Negocios;
 import admin.mx.com.perron.utils.MyProperties;
 import admin.mx.com.perron.utils.Utils;
 /**
@@ -29,7 +31,8 @@ public class ListNegociosActivity extends AdministracionMain{
             LinearLayoutManager llm = new LinearLayoutManager(this);
             llm.setOrientation(LinearLayoutManager.VERTICAL);
             recList.setLayoutManager(llm);
-            List<NegociosImage> listaNegocios = MyProperties.getInstance().listaNegocios;
+            List<Negocios> listaNegocios = MyProperties.getInstance().listaNegocios;
+            Toast.makeText(this, "registros: "+listaNegocios.size(), Toast.LENGTH_LONG).show();
             NegociosAdapter adapter = new NegociosAdapter(listaNegocios, getBaseContext());
             recList.setAdapter(adapter);
         }catch(Exception e){

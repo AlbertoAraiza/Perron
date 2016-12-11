@@ -78,7 +78,7 @@ public class GPSTracker extends Service implements LocationListener, ActivityCom
     }
 
     public void requestPermissions(String[] permission, int requestId) {
-        ActivityCompat.requestPermissions((Activity) mContext, permission, requestId);
+        ActivityCompat.requestPermissions(mainActivity, permission, requestId);
 
     }
 

@@ -6,8 +6,12 @@ public class Negocios implements Parcelable {
     private Long idNegocio;
     private String nombreNegocio;
     private String direccion;
+    /*
+    * calle numero, colonia, codigo postal, municipio, estado, horario,
+    * telefonos*/
     private String coordenadas;
     private String logotipo;
+
 
 
     public Negocios() {

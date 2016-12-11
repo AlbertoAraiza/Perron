@@ -1,14 +1,11 @@
 package admin.mx.com.perron.logic;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -25,8 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import admin.mx.com.perron.R;
 import admin.mx.com.perron.activities.MenuMain;
-import admin.mx.com.perron.entities.NegociosImage;
-import admin.mx.com.perron.entities.NegociosImage2;
+import admin.mx.com.perron.entities.Negocios;
 import admin.mx.com.perron.utils.Constants;
 import admin.mx.com.perron.utils.Utils;
 /**
@@ -124,28 +120,18 @@ public class ListaResultado extends AsyncTask {
     }
     public void getListaNegocios(String listaNegocio) {
         Gson gson = new Gson();
-        List<NegociosImage2> listaNegocios = gson.fromJson(listaNegocio, new TypeToken<List<NegociosImage2>>(){}.getType());
+        List<Negocios> listaNegocios = gson.fromJson(listaNegocio, new TypeToken<List<Negocios>>(){}.getType());
 
-        List<NegociosImage> listaTemporal = new ArrayList<NegociosImage>();
+        List<Negocios> listaTemporal = new ArrayList<Negocios>();
         for(int i=0;i<listaNegocios.size();i++){
-            NegociosImage2 neg = (NegociosImage2)listaNegocios.get(i);
+            Negocios neg = (Negocios)listaNegocios.get(i);
 
-            Bitmap bitmap = null;
-            /*try {
-
-                Log.d(Constants.appName, "neg.getLogotipo() : "+neg.getLogotipo());
-                bitmap = BitmapFactory.decodeByteArray(neg.getImage(), 0, neg.getImage().length);
-            } catch(Exception e){
-                e.printStackTrace();
-                bitmap = BitmapFactory.decodeResource(ctx.getResources(), R.mipmap.ic_launcher);
-            }*/
-            bitmap = BitmapFactory.decodeResource(ctx.getResources(), R.mipmap.ic_launcher);
-            NegociosImage negociosImage;
-            negociosImage = new NegociosImage();
-            negociosImage.setCoordenadas(neg.getCoordenadas());
-            negociosImage.setDireccion(neg.getDireccion());
+            Negocios negociosImage;
+            negociosImage = new Negocios();
             negociosImage.setIdNegocio(neg.getIdNegocio());
-            negociosImage.setLogotipo(bitmap);
+            negociosImage.setDireccion(neg.getDireccion());
+            negociosImage.setCoordenadas(neg.getCoordenadas());
+            negociosImage.setLogotipo(neg.getLogotipo());
             negociosImage.setNombreNegocio(neg.getNombreNegocio());
             listaTemporal.add(negociosImage);
             Log.d(Constants.appName, neg.toString());

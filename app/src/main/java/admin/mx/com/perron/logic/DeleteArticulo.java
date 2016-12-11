@@ -23,8 +23,7 @@ import java.util.List;
 import admin.mx.com.perron.R;
 import admin.mx.com.perron.activities.ListNegociosActivity;
 import admin.mx.com.perron.activities.MenuMain;
-import admin.mx.com.perron.entities.NegociosImage;
-import admin.mx.com.perron.entities.NegociosImage2;
+import admin.mx.com.perron.entities.Negocios;
 import admin.mx.com.perron.utils.Constants;
 import admin.mx.com.perron.utils.Utils;
 /**
@@ -33,12 +32,12 @@ import admin.mx.com.perron.utils.Utils;
 public class DeleteArticulo extends AsyncTask{
     private Context ctx;
     RequestQueue queue = null;
-    NegociosImage negociosImage;
+    Negocios negociosImage;
 
 
 
 
-        public DeleteArticulo(Context ctx, NegociosImage negociosImage){
+        public DeleteArticulo(Context ctx, Negocios negociosImage){
             this.ctx = ctx;
             queue = Volley.newRequestQueue(ctx);
             this.negociosImage = negociosImage;

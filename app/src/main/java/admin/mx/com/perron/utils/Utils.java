@@ -25,7 +25,6 @@ import java.util.Date;
 import java.util.List;
 
 import admin.mx.com.perron.entities.Negocios;
-import admin.mx.com.perron.entities.NegociosImage;
 
 public class Utils {
     private static Bus bus;
