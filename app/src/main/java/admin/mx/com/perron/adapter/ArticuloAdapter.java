@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.squareup.otto.Subscribe;
 import java.util.List;
 import admin.mx.com.perron.R;
 import admin.mx.com.perron.activities.AgregarArticuloActivity;

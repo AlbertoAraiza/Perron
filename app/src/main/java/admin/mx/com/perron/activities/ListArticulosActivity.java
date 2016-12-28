@@ -10,8 +10,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.otto.Subscribe;
-
 import java.util.List;
 import admin.mx.com.perron.R;
 import admin.mx.com.perron.adapter.ArticuloAdapter;

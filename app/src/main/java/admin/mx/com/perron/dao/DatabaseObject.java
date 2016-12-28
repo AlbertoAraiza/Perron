@@ -302,7 +302,7 @@ public class DatabaseObject extends AsyncTask {
             }
         }
         MyProperties.getInstance().listaArticulos = listaTemporal;
-        Utils.getBus().post("created lista articulos");
+//        Utils.getBus().post("created lista articulos");
     }
 
     /**

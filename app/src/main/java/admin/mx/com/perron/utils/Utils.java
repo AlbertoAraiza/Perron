@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
 import com.google.gson.Gson;
-import com.squareup.otto.Bus;
 
 import org.apache.commons.codec.binary.Base64;
 
@@ -27,7 +26,6 @@ import java.util.List;
 import admin.mx.com.perron.entities.Negocios;
 
 public class Utils {
-    private static Bus bus;
 
     public Utils(){
 
@@ -177,12 +175,12 @@ public class Utils {
         return encodedString;
     }
 
-    public static Bus getBus() {
+    /*public static Bus getBus() {
         if(bus==null){
             bus = new Bus();
         }
         return bus;
-    }
+    }*/
     public static Bitmap getBitmapFromImageView(ImageView imageView){
         BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
         Bitmap bitmap = drawable.getBitmap();

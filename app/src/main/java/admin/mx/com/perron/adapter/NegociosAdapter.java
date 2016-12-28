@@ -15,8 +15,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -194,8 +192,6 @@ public class NegociosAdapter extends RecyclerView.Adapter<NegociosAdapter.Negoci
     public void setmContext(Context mContext) {
         this.mContext = mContext;
     }
-
-    @Subscribe
     public void callArticulo(String nada){
 
         Intent intent = new Intent(getmContext(), ListArticulosActivity.class);

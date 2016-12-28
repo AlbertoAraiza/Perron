@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnChooseImage = (Button) findViewById(R.id.btn_choose_image);
         btnChooseImage.setOnClickListener(this);
         imgView = (ImageView) findViewById(R.id.image_ftp);
-        WifiManager wm = (WifiManager) getSystemService(WIFI_SERVICE);
+        WifiManager wm = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
         String ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
         textIp = (TextView)findViewById(R.id.ip);
         textIp.setText("IP address new job: "+ip);

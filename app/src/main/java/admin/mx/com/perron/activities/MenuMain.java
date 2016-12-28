@@ -86,7 +86,7 @@ public class MenuMain extends AdministracionMain implements View.OnClickListener
     public void onClick(View v) {
         if(cvOpcion1 ==v){
             Log.d(Constants.appName, "Opcion 1");
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             intent.putExtra("option", Constants.CREAR);
             startActivity(intent);
         }else if (cvOpcion2 == v){
@@ -99,7 +99,7 @@ public class MenuMain extends AdministracionMain implements View.OnClickListener
     public void loadListNegocios(List<Negocios> listaNegocios){
         try {
             Log.d(Constants.appName, "return from webservice");
-            Intent intent = new Intent(this, ListNegociosActivity.class);
+            Intent intent = new Intent(getApplicationContext(), ListNegociosActivity.class);
             MyProperties.getInstance().listaNegocios = listaNegocios;
             Log.d(Constants.appName, "Calling ListNegociosActivity");
             startActivity(intent);
