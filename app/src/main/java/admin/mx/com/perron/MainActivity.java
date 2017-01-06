@@ -1,6 +1,5 @@
 package admin.mx.com.perron;
 
-import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -11,7 +10,6 @@ import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -27,15 +25,19 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.squareup.picasso.Picasso;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.List;
+
 import admin.mx.com.perron.entities.Negocios;
 import admin.mx.com.perron.logic.RealPathUtil;
 import admin.mx.com.perron.utils.CheckPermission;
@@ -323,6 +325,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             json.put("coordenadas", edtCoordenadas.getText());
             if(option == Constants.ACTUALIZAR){
                 json.put("idNegocio", negociosImage.getIdNegocio());
+                Toast.makeText(this, String.valueOf(negociosImage.getIdNegocio()), Toast.LENGTH_LONG).show();
             }
 
             String imagen = Utils.getEncodedString(thumbnail);

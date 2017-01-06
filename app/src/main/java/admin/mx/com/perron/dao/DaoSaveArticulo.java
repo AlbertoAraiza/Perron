@@ -1,11 +1,9 @@
 package admin.mx.com.perron.dao;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
+
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -13,22 +11,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.gson.Gson;
-import android.util.Base64;
-import org.json.JSONArray;
+
 import org.json.JSONException;
 import org.json.JSONObject;
-import java.util.ArrayList;
-import java.util.List;
+
 import admin.mx.com.perron.MainActivity;
-import admin.mx.com.perron.R;
 import admin.mx.com.perron.activities.AgregarArticuloActivity;
 import admin.mx.com.perron.entities.Articulo;
-import admin.mx.com.perron.entities.Images;
-import admin.mx.com.perron.otto.Article;
-import admin.mx.com.perron.otto.ImagesItems;
 import admin.mx.com.perron.utils.Constants;
-import admin.mx.com.perron.utils.MyProperties;
 import admin.mx.com.perron.utils.Utils;
 /**
  * Created by jorge on 3/22/2016.
@@ -121,7 +111,7 @@ public class DaoSaveArticulo extends AsyncTask {
             json.put("precio", articulo.getPrecio());
             json.put("descripcion", articulo.getDescripcion());
             json.put("idNegocio", articulo.getIdNegocio());
-            json.put("imagenString", articulo.getImageCode());
+//            json.put("imagenString", articulo.getImageCode());
         } catch (JSONException e) {
             System.out.println("*******************createJsonObject(Articulo articulo " + Utils.getStackTrace(e) + "******************************************************************************ERROR ON JSONOBject: ");
         }

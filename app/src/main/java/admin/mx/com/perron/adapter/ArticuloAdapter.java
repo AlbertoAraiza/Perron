@@ -1,11 +1,8 @@
 package admin.mx.com.perron.adapter;
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
-import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -15,18 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import java.util.List;
+
 import admin.mx.com.perron.R;
-import admin.mx.com.perron.activities.AgregarArticuloActivity;
-import admin.mx.com.perron.activities.ListArticulosActivity;
 import admin.mx.com.perron.dao.DatabaseObject;
 import admin.mx.com.perron.entities.Articulo;
-import admin.mx.com.perron.otto.ImagesItems;
-import admin.mx.com.perron.otto.Items;
 import admin.mx.com.perron.utils.Constants;
 import admin.mx.com.perron.utils.MyProperties;
-import admin.mx.com.perron.utils.Utils;
 /**
  * Created by jorge on 3/16/2016.
  */
@@ -113,7 +106,7 @@ public class ArticuloAdapter extends RecyclerView.Adapter<ArticuloAdapter.MyView
             holder.precio.setText(articulo.getPrecio() + "");
             holder.descripcion.setText(articulo.getDescripcion());
             holder.idNegocio.setText(articulo.getIdNegocio() + "");
-            holder.imageViewer.setImageBitmap(articulo.getImageBitmap());
+//            holder.imageViewer.setImageBitmap(articulo.getImageBitmap());
         }
     }
 

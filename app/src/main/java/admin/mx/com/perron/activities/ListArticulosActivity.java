@@ -1,7 +1,6 @@
 package admin.mx.com.perron.activities;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -10,14 +9,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
+
 import admin.mx.com.perron.R;
 import admin.mx.com.perron.adapter.ArticuloAdapter;
-import admin.mx.com.perron.dao.DaoArticulo;
-import admin.mx.com.perron.dao.DatabaseObject;
 import admin.mx.com.perron.entities.Articulo;
 import admin.mx.com.perron.entities.Negocios;
-import admin.mx.com.perron.otto.ImagesItems;
 import admin.mx.com.perron.utils.Constants;
 import admin.mx.com.perron.utils.MyProperties;
 import admin.mx.com.perron.utils.Utils;
@@ -25,7 +24,7 @@ import admin.mx.com.perron.utils.Utils;
  * Created by jorge on 3/13/2016.
  */
 public class ListArticulosActivity extends AdministracionMain implements View.OnClickListener{
-    Negocios negociosImage;
+    Negocios negociosImage = MyProperties.getInstance().negocio;
     ImageView imageNegocio;
     TextView idNegocio;
     TextView nombreNegocio;
@@ -43,13 +42,14 @@ public class ListArticulosActivity extends AdministracionMain implements View.On
         super.onCreate(savedInstanceState);
         try {
             setContentView(R.layout.articulos_activity);
-            List<Negocios> listaNegocios = MyProperties.getInstance().listaNegocios;
-            Bundle extras =  getIntent().getExtras();
-            if(extras!=null) {
-                int position = extras.getInt("position");
-                negociosImage = listaNegocios.get(position);
-                initializeView();
-            }
+//            List<Negocios> listaNegocios = MyProperties.getInstance().listaNegocios;
+//            Bundle extras =  getIntent().getExtras();
+//            if(extras!=null) {
+//                int position = extras.getInt("position");
+//                negociosImage = listaNegocios.get(position);
+//                initializeView();
+//            }
+            initializeView();
             recList = (RecyclerView) findViewById(R.id.articulos_recycler_view);
             recList.setHasFixedSize(true);
             LinearLayoutManager llm = new LinearLayoutManager(this);
@@ -69,10 +69,12 @@ public class ListArticulosActivity extends AdministracionMain implements View.On
         direccion = (TextView) findViewById(R.id.direccion_articulos_activity);
         coordenadas = (TextView) findViewById(R.id.coordenadas_articulos_activity);
         btnAddItem = (Button)findViewById(R.id.btn_add_item);
-        idNegocio.setText(negociosImage.getIdNegocio() + "");
-        nombreNegocio.setText(negociosImage.getNombreNegocio());
-        direccion.setText(negociosImage.getDireccion());
-        coordenadas.setText(negociosImage.getCoordenadas());
+
+        Picasso.with(imageNegocio.getContext()).load(negociosImage.getLogotipo()).into(imageNegocio);
+        idNegocio.setText("ID Negocio: " + negociosImage.getIdNegocio());
+        nombreNegocio.setText("Nombre Negocio: " + negociosImage.getNombreNegocio());
+        direccion.setText("Direccion: " + negociosImage.getDireccion());
+        coordenadas.setText("Coordenadas: " + negociosImage.getCoordenadas());
         btnAddItem.setOnClickListener(this);
     }
 

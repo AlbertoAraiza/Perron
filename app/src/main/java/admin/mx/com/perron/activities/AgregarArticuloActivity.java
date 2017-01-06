@@ -1,5 +1,4 @@
 package admin.mx.com.perron.activities;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -7,12 +6,10 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,6 +20,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+
 import admin.mx.com.perron.R;
 import admin.mx.com.perron.dao.DaoArticulo;
 import admin.mx.com.perron.dao.DaoDeleteImageImage;
@@ -30,7 +28,6 @@ import admin.mx.com.perron.dao.DaoImages;
 import admin.mx.com.perron.dao.DaoSaveArticulo;
 import admin.mx.com.perron.dao.DaoUpdateImageArticulo;
 import admin.mx.com.perron.dao.DaoUpdateImageImage;
-import admin.mx.com.perron.dao.DatabaseObject;
 import admin.mx.com.perron.entities.Articulo;
 import admin.mx.com.perron.entities.ArticuloTemp;
 import admin.mx.com.perron.entities.Images;
@@ -175,7 +172,7 @@ public class AgregarArticuloActivity extends AdministracionMain implements View.
             art.setPrecio(Double.parseDouble(editPrecioArticulos.getText().toString()));
             art.setNombreArticulo(editNombreArticulos.getText().toString());
             art.setDescripcion(editDescripcionArticulos.getText().toString());
-            art.setImageCode(imagesList.get(0));
+//            art.setImageCode(imagesList.get(0));
             art.setIdNegocio(idNegocio);
             DaoSaveArticulo daoArticulo = new DaoSaveArticulo(getApplicationContext(), this, art);
             daoArticulo.execute();
@@ -188,8 +185,8 @@ public class AgregarArticuloActivity extends AdministracionMain implements View.
         editPrecioArticulos.setText(String.valueOf(articulo.getPrecio()));
         editNombreArticulos.setText(articulo.getNombreArticulo());
         editDescripcionArticulos.setText(articulo.getDescripcion());
-        View child = getNewImage(articulo.getImageBitmap(), articulo.getIdArticulo()+"");
-        layoutImage.addView(child);
+//        View child = getNewImage(articulo.getImageBitmap(), articulo.getIdArticulo()+"");
+//        layoutImage.addView(child);
         getListaImages();
         return true;
     }
@@ -223,7 +220,7 @@ public class AgregarArticuloActivity extends AdministracionMain implements View.
             art.setNombreArticulo(editNombreArticulos.getText().toString());
             art.setDescripcion(editDescripcionArticulos.getText().toString());
             //art.setImageCode(Utils.getEncodedString(Utils.getBitmapFromImageView(imageView)));
-            art.setImageCode(" ");
+//            art.setImageCode(" ");
             art.setIdNegocio(articulo.getIdNegocio());
             art.setIdArticulo(articulo.getIdArticulo());
             return art;

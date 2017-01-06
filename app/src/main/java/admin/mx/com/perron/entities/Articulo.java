@@ -1,5 +1,4 @@
 package admin.mx.com.perron.entities;
-import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 /**
@@ -13,9 +12,7 @@ public class Articulo implements Parcelable{
     private double precio;
     private String descripcion;
     private int idNegocio;
-    private byte[] imagen;
-    private Bitmap imageBitmap;
-    private String imageCode;
+    private String imagen;
 
     protected Articulo(Parcel in) {
         idArticulo = in.readInt();
@@ -23,9 +20,7 @@ public class Articulo implements Parcelable{
         precio = in.readDouble();
         descripcion = in.readString();
         idNegocio = in.readInt();
-        imagen = in.createByteArray();
-        imageBitmap = in.readParcelable(Bitmap.class.getClassLoader());
-        imageCode = in.readString();
+        imagen = in.readString();
     }
 
     public static final Creator<Articulo> CREATOR = new Creator<Articulo>() {
@@ -85,28 +80,12 @@ public class Articulo implements Parcelable{
         this.idNegocio = idNegocio;
     }
 
-    public byte[] getImagen() {
+    public String getImagen() {
         return imagen;
     }
 
-    public void setImagen(byte[] imagen) {
+    public void setImagen(String imagen) {
         this.imagen = imagen;
-    }
-
-    public Bitmap getImageBitmap() {
-        return imageBitmap;
-    }
-
-    public void setImageBitmap(Bitmap imageBitmap) {
-        this.imageBitmap = imageBitmap;
-    }
-
-    public String getImageCode() {
-        return imageCode;
-    }
-
-    public void setImageCode(String imageCode) {
-        this.imageCode = imageCode;
     }
 
     @Override
@@ -116,9 +95,7 @@ public class Articulo implements Parcelable{
         dest.writeDouble(precio);
         dest.writeString(descripcion);
         dest.writeInt(idNegocio);
-        dest.writeByteArray(imagen);
-        dest.writeParcelable(imageBitmap, flags);
-        dest.writeString(imageCode);
+        dest.writeString(imagen);
     }
     @Override
     public String toString() {

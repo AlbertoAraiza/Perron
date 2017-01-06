@@ -146,18 +146,19 @@ public class NegociosAdapter extends RecyclerView.Adapter<NegociosAdapter.Negoci
                 public boolean onMenuItemClick(MenuItem item) {
                     try {
                         position = getLayoutPosition();
+                        MyProperties.getInstance().negocio = MyProperties.getInstance().listaNegocios.get(position);
                         Log.d(Constants.appName, "position");
                         Toast.makeText(v.getContext(), " agregar articulo!! ", Toast.LENGTH_SHORT).show();
                         Articulo art = new Articulo();
                         Negocios negociosImage = (Negocios)MyProperties.getInstance().listaNegocios.get(position);
                         Log.d(Constants.appName, negociosImage.toString());
                         int idNegocio = negociosImage.getIdNegocio().intValue();
-                        art.setIdArticulo(idNegocio);
-                        art.setPrecio(123);
-                        art.setDescripcion("descripcion");
-                        art.setNombreArticulo("nombre");
+//                        art.setIdArticulo(idNegocio);
+//                        art.setPrecio(123);
+//                        art.setDescripcion("descripcion");
+//                        art.setNombreArticulo("nombre");
                         art.setIdNegocio(idNegocio);
-                        art.setImageCode("imagen");
+//                        art.setImageCode("imagen");
                         DaoArticulo daoArticulo = new DaoArticulo( getmContext(), Constants.LISTAR_ARTICULOS);
                         daoArticulo.getListaArticulo(art);
                     } catch (Exception e) {
@@ -173,8 +174,6 @@ public class NegociosAdapter extends RecyclerView.Adapter<NegociosAdapter.Negoci
             v.setOnCreateContextMenuListener(this);
             return false;
         }
-
-
     }
 
     public List<Negocios> getNegociosList() {

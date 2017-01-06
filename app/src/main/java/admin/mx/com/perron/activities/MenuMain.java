@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.CardView;
@@ -14,8 +13,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import java.util.ArrayList;
+
 import java.util.List;
+
 import admin.mx.com.perron.MainActivity;
 import admin.mx.com.perron.R;
 import admin.mx.com.perron.entities.Negocios;

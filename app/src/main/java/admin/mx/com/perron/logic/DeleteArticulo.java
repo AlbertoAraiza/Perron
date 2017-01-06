@@ -1,28 +1,19 @@
 package admin.mx.com.perron.logic;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.TextView;
+
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+
 import org.json.JSONException;
 import org.json.JSONObject;
-import java.util.ArrayList;
-import java.util.List;
-import admin.mx.com.perron.R;
-import admin.mx.com.perron.activities.ListNegociosActivity;
-import admin.mx.com.perron.activities.MenuMain;
+
 import admin.mx.com.perron.entities.Negocios;
 import admin.mx.com.perron.utils.Constants;
 import admin.mx.com.perron.utils.Utils;
@@ -46,7 +37,7 @@ public class DeleteArticulo extends AsyncTask{
         protected Object doInBackground(Object[] params) {
             try {
                 Log.d(Constants.appName, "doInBackground");
-                String url = Constants.URL_BASE +Constants.DELETE_METHOD;
+                String url = Constants.URL_BASE + Constants.DELETE_METHOD;
                 executeRequestJson2(url);
             }catch (Exception e) {
                 StringBuffer errorMsg = new StringBuffer(Utils.getStackTrace(e));
