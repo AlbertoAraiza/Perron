@@ -28,6 +28,7 @@ import admin.mx.com.perron.activities.AgregarArticuloActivity;
 import admin.mx.com.perron.activities.ListArticulosActivity;
 import admin.mx.com.perron.entities.Articulo;
 import admin.mx.com.perron.entities.Images;
+import admin.mx.com.perron.otto.ImagesItems;
 import admin.mx.com.perron.utils.Constants;
 import admin.mx.com.perron.utils.MyProperties;
 import admin.mx.com.perron.utils.Utils;
@@ -188,7 +189,7 @@ public class DatabaseObject extends AsyncTask {
         try {
             json.put("idArticulo", images.getIdArticulo());
             json.put("idImagen", images.getIdImagen());
-            json.put("imagenString", images.getImagenString());
+            json.put("imagenString", images.getImagen());
         } catch (JSONException e) {
             System.out.println("*********************createJsonObject(Images images " + Utils.getStackTrace(e) + "******************************************************************************ERROR ON JSONOBject: ");
         }
@@ -217,12 +218,13 @@ public class DatabaseObject extends AsyncTask {
     public JSONObject createJsonObject3(Articulo articulo) {
         JSONObject json = new JSONObject();
         try {
-//            json.put("nombreArticulo", articulo.getNombreArticulo());
-//            json.put("precio", articulo.getPrecio());
-//            json.put("descripcion", articulo.getDescripcion());
+            json.put("nombreArticulo", articulo.getNombreArticulo());
+            json.put("precio", articulo.getPrecio());
+            json.put("descripcion", articulo.getDescripcion());
             json.put("idNegocio", articulo.getIdNegocio()+"");
 //            json.put("imagenString", articulo.getImageCode());
-//            json.put("idArticulo", articulo.getIdArticulo());
+            json.put("imagen", articulo.getImagen());
+            json.put("idArticulo", articulo.getIdArticulo());
         } catch (JSONException e) {
             Log.d(Constants.appName, "Error createJsonObject3: " + Utils.getStackTrace(e));
         }
@@ -333,16 +335,16 @@ public class DatabaseObject extends AsyncTask {
      * Metodos para mostrar las imagenes de los articulos guardados
      */
     public void getImages(String url) throws Exception{
-        JsonObjectRequest jsonObjReq =
-                new JsonObjectRequest(Request.Method.POST,
-                        url, jsonObject.toString(), new Response.Listener<JSONObject>() {
+        JsonArrayRequest jsonObjReq =
+                new JsonArrayRequest(Request.Method.POST,
+                        url, jsonObject.toString(), new Response.Listener<JSONArray>() {
 
                     @Override
-                    public void onResponse(JSONObject response) {
+                    public void onResponse(JSONArray response) {
 
-                        String input = response.toString();
+//                        String input = response.toString();
                         //progressDialog.dismiss();
-//                        getListaImagenes(input);
+                        getListaImagenes(response);
                     }
                 }, new Response.ErrorListener() {
 
@@ -360,26 +362,26 @@ public class DatabaseObject extends AsyncTask {
         queue.add(jsonObjReq);
     }
 
-    public void getListaImagenes(String listaArticulos) {
-//        JSONArray jsonMainArr = null;
-        Log.d(Constants.appName, "listaArticulos : "+listaArticulos);
-        try {
-            JSONObject jsonObj = new JSONObject(listaArticulos);
+    public void getListaImagenes(JSONArray listaArticulos) {
+        JSONArray jsonMainArr = listaArticulos;
+//        Log.d(Constants.appName, "listaArticulos : "+listaArticulos);
+//        try {
+//            JSONObject jsonObj = new JSONObject(listaArticulos);
 //            jsonMainArr = jsonObj.getJSONArray("friends");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
         Gson gson = new Gson();
-//        Log.d(Constants.appName, "jsonMainArr.toString() : " + jsonMainArr.toString());
+        Log.d(Constants.appName, "jsonMainArr.toString() : " + jsonMainArr.toString());
 
         List<Images> listaTemporal = new ArrayList<Images>();
-//        for(int i=0;i<jsonMainArr.length();i++){
-//            JSONObject  imagen = null;
-//            try {
-//                imagen = jsonMainArr.getJSONObject(i);
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
+        for(int i=0;i<jsonMainArr.length();i++){
+            JSONObject  imagen = null;
+            try {
+                imagen = jsonMainArr.getJSONObject(i);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 //            Bitmap bitmap = null;
 //            try {
 //                byte[] imageString = Base64.decode(imagen.getString("imagen").getBytes(), Base64.DEFAULT);
@@ -389,22 +391,22 @@ public class DatabaseObject extends AsyncTask {
 //                e.printStackTrace();
 //                bitmap = BitmapFactory.decodeResource(ctx.getResources(), R.mipmap.ic_launcher);
 //            }
-//            Images itemImage;
-//            itemImage = new Images();
-//            try {
-//                itemImage.setImageBitmap(bitmap);
-//                itemImage.setIdArticulo(imagen.getInt("idArticulo"));
-//                itemImage.setIdImagen(imagen.getInt("idImagen"));
-//                listaTemporal.add(itemImage);
-//                Log.d(Constants.appName, itemImage.toString());
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        MyProperties.getInstance().listaImagenes = listaTemporal;
-//        ImagesItems imgs = new ImagesItems();
-//        MyProperties.getInstance().articulo = this.articulo;
-//        callUpdateArticulo();
+            Images itemImage;
+            itemImage = new Images();
+            try {
+                itemImage.setImagen(imagen.getString("imagen"));
+                itemImage.setIdArticulo(imagen.getInt("idArticulo"));
+                itemImage.setIdImagen(imagen.getInt("idImagen"));
+                listaTemporal.add(itemImage);
+                Log.d(Constants.appName, itemImage.toString());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        MyProperties.getInstance().listaImagenes = listaTemporal;
+        ImagesItems imgs = new ImagesItems();
+        MyProperties.getInstance().articulo = this.articulo;
+        callUpdateArticulo();
     }
     public void callUpdateArticulo(){
         Intent intent = new Intent(this.ctx, AgregarArticuloActivity.class);

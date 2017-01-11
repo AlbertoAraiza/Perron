@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import admin.mx.com.perron.R;
@@ -106,6 +108,9 @@ public class ArticuloAdapter extends RecyclerView.Adapter<ArticuloAdapter.MyView
             holder.precio.setText(articulo.getPrecio() + "");
             holder.descripcion.setText(articulo.getDescripcion());
             holder.idNegocio.setText(articulo.getIdNegocio() + "");
+            Picasso.with(holder.imageViewer.getContext())
+                    .load(articulo.getImagen()).placeholder(R.drawable.not_available)
+                    .into(holder.imageViewer);
 //            holder.imageViewer.setImageBitmap(articulo.getImageBitmap());
         }
     }

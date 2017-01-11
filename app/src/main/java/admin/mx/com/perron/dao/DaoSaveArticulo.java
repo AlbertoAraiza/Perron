@@ -111,7 +111,7 @@ public class DaoSaveArticulo extends AsyncTask {
             json.put("precio", articulo.getPrecio());
             json.put("descripcion", articulo.getDescripcion());
             json.put("idNegocio", articulo.getIdNegocio());
-//            json.put("imagenString", articulo.getImageCode());
+            json.put("imagen", articulo.getImagen());
         } catch (JSONException e) {
             System.out.println("*******************createJsonObject(Articulo articulo " + Utils.getStackTrace(e) + "******************************************************************************ERROR ON JSONOBject: ");
         }
@@ -123,8 +123,8 @@ public class DaoSaveArticulo extends AsyncTask {
 
     public void launchBarDialog() {
         barProgressDialog = new ProgressDialog(agregarArticuloActivity);
-        barProgressDialog.setTitle("Downloading Image ...");
-        barProgressDialog.setMessage("Download in progress ...");
+        barProgressDialog.setTitle("Uploading Image ...");
+        barProgressDialog.setMessage("Upload in progress ...");
         barProgressDialog.setProgressStyle(barProgressDialog.STYLE_HORIZONTAL);
         barProgressDialog.setProgress(0);
         barProgressDialog.setMax(20);

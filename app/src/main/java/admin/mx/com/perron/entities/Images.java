@@ -1,16 +1,12 @@
 package admin.mx.com.perron.entities;
 
-import android.graphics.Bitmap;
-
 /**
  * Created by jorge on 3/19/2016.
  */
 public class Images {
     private int idArticulo;
     private int idImagen;
-    private byte[] imagen;
-    private Bitmap imageBitmap;
-    private String imagenString;
+    private String imagen;
 
     public int getIdArticulo() {
         return idArticulo;
@@ -28,27 +24,11 @@ public class Images {
         this.idImagen = idImagen;
     }
 
-    public byte[] getImagen() {
+    public String getImagen() {
         return imagen;
     }
 
-    public void setImagen(byte[] imagen) {
+    public void setImagen(String imagen) {
         this.imagen = imagen;
-    }
-
-    public Bitmap getImageBitmap() {
-        return imageBitmap;
-    }
-
-    public void setImageBitmap(Bitmap imageBitmap) {
-        this.imageBitmap = imageBitmap;
-    }
-
-    public String getImagenString() {
-        return imagenString;
-    }
-
-    public void setImagenString(String imagenString) {
-        this.imagenString = imagenString;
     }
 }

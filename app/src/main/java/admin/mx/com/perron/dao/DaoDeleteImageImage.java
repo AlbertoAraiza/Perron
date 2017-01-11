@@ -95,7 +95,7 @@ public class DaoDeleteImageImage extends AsyncTask {
         try {
             json.put("idArticulo",123);
             json.put("idImagen", images.getIdImagen());
-            json.put("imagenString", images.getImagenString());
+            json.put("imagenString", images.getImagen());
         } catch (JSONException e) {
             System.out.println("*********************createJsonObject(Images images " + Utils.getStackTrace(e) + "******************************************************************************ERROR ON JSONOBject: ");
         }

@@ -16,6 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -120,6 +122,7 @@ public class AgregarArticuloActivity extends AdministracionMain implements View.
             if (requestCode == TAKE_PHOTO_CODE && resultCode == RESULT_OK && null != data) {
                 Log.d("CameraDemo", "Pic saved");
                 photo = (Bitmap) data.getExtras().get("data");
+
             } else if (requestCode == RESULT_LOAD_IMG && resultCode == RESULT_OK && null != data) {
                 try {
                     Uri uriFromPath = uriFromPath(data);
@@ -172,7 +175,7 @@ public class AgregarArticuloActivity extends AdministracionMain implements View.
             art.setPrecio(Double.parseDouble(editPrecioArticulos.getText().toString()));
             art.setNombreArticulo(editNombreArticulos.getText().toString());
             art.setDescripcion(editDescripcionArticulos.getText().toString());
-//            art.setImageCode(imagesList.get(0));
+            art.setImagen(imagesList.get(0));
             art.setIdNegocio(idNegocio);
             DaoSaveArticulo daoArticulo = new DaoSaveArticulo(getApplicationContext(), this, art);
             daoArticulo.execute();
@@ -193,10 +196,10 @@ public class AgregarArticuloActivity extends AdministracionMain implements View.
     public void getListaImages() {
         List<Images> listImages = MyProperties.getInstance().listaImagenes;
         for(int i=0;i<listImages.size();i++){
-            Images images = (Images)listImages.get(i);
-            images.setImageBitmap(images.getImageBitmap());
-            Log.d(Constants.appName, images.toString());
-            layoutImage.addView(getButtonRow(images.getImageBitmap(), images.getIdImagen()));
+            Images images = listImages.get(i);
+//            images.setImageBitmap(images.getImageBitmap());
+//            Log.d(Constants.appName, images.toString());
+            layoutImage.addView(getButtonRow(images.getImagen(), images.getIdImagen()));
         }
     }
     /**
@@ -219,8 +222,8 @@ public class AgregarArticuloActivity extends AdministracionMain implements View.
             art.setPrecio(Double.parseDouble(editPrecioArticulos.getText().toString()));
             art.setNombreArticulo(editNombreArticulos.getText().toString());
             art.setDescripcion(editDescripcionArticulos.getText().toString());
-            //art.setImageCode(Utils.getEncodedString(Utils.getBitmapFromImageView(imageView)));
-//            art.setImageCode(" ");
+            //art.setImagen(Utils.getEncodedString(Utils.getBitmapFromImageView(imageView)));
+            art.setImagen(articulo.getImagen());
             art.setIdNegocio(articulo.getIdNegocio());
             art.setIdArticulo(articulo.getIdArticulo());
             return art;
@@ -231,11 +234,15 @@ public class AgregarArticuloActivity extends AdministracionMain implements View.
         return art;
     }
 
-    public View getButtonRow(Bitmap picture, final int idImagen){
+    public View getButtonRow(String picture, final int idImagen){
         LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
         View inflatedLayout= inflater.inflate(R.layout.image_row_layout, null, false);
         ImageView image = (ImageView)inflatedLayout.findViewById(R.id.id_image_update_articulo);
-        image.setImageBitmap(picture);
+//        image.setImageBitmap(picture);
+        Picasso.with(image.getContext())
+                .load(picture)
+                .placeholder(R.drawable.not_available)
+                .into(image);
         Button btnDeleteArticulos = (Button)inflatedLayout.findViewById(R.id.btn_delete_articulos);
         Button btnUpdateArticulos = (Button)inflatedLayout.findViewById(R.id.btn_update_articulos);
         btnUpdateArticulos.setOnClickListener(new View.OnClickListener() {
@@ -261,7 +268,7 @@ public class AgregarArticuloActivity extends AdministracionMain implements View.
     public void saveImage(int idArticulo, String imgString){
         Images images = new Images();
         images.setIdArticulo(idArticulo);
-        images.setImagenString(imgString);
+        images.setImagen(imgString);
         DaoImages databaseObject = new DaoImages(this,this,  images, Constants.GUARDAR_IMAGEN);
         databaseObject.execute();
     }
@@ -372,7 +379,7 @@ public class AgregarArticuloActivity extends AdministracionMain implements View.
     public void actualizarImagenImagen(String imgString, int idImagen){
         Images images = new Images();
         images.setIdImagen(idImagen);
-        images.setImagenString(imgString);
+        images.setImagen(imgString);
         DaoUpdateImageImage daoUpdateImageImage = new DaoUpdateImageImage(this, this, images);
         daoUpdateImageImage.execute();
     }//END actualizarImagenImagen
@@ -392,7 +399,7 @@ public class AgregarArticuloActivity extends AdministracionMain implements View.
     public void eliminarImagenImagen( int idImagen){
         Images images = new Images();
         images.setIdImagen(idImagen);
-        images.setImagenString("imags");
+        images.setImagen("imags");
         DaoDeleteImageImage dao = new DaoDeleteImageImage(this, this, images);
         dao.execute();
     }//END actualizarImagenImagen

@@ -1,9 +1,6 @@
 package admin.mx.com.perron.dao;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.util.Base64;
 import android.util.Log;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -13,7 +10,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import admin.mx.com.perron.MainActivity;
-import admin.mx.com.perron.R;
 import admin.mx.com.perron.activities.AgregarArticuloActivity;
 import admin.mx.com.perron.entities.Articulo;
 import admin.mx.com.perron.entities.Images;
@@ -130,7 +125,7 @@ public class DaoImages extends AsyncTask {
         try {
             json.put("idArticulo", images.getIdArticulo());
             json.put("idImagen", images.getIdImagen());
-            json.put("imagenString", images.getImagenString());
+            json.put("imagenString", images.getImagen());
         } catch (JSONException e) {
             System.out.println("*********************createJsonObject(Images images " + Utils.getStackTrace(e) + "******************************************************************************ERROR ON JSONOBject: ");
         }
@@ -178,7 +173,7 @@ public class DaoImages extends AsyncTask {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Gson gson = new Gson();
+//        Gson gson = new Gson();
         Log.d(Constants.appName, "jsonMainArr.toString() : " + jsonMainArr.toString());
 
         List<Articulo> listaTemporal = new ArrayList<Articulo>();
@@ -189,15 +184,15 @@ public class DaoImages extends AsyncTask {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            Bitmap bitmap = null;
-            try {
-                byte[] imageString = Base64.decode(articulo.getString("imagenString"), Base64.DEFAULT);
-                Log.d(Constants.appName, "imagenString : " + articulo.getString("imagenString").getBytes());
-                bitmap = BitmapFactory.decodeByteArray(imageString, 0, imageString.length);
-            } catch (Exception e) {
-                e.printStackTrace();
-                bitmap = BitmapFactory.decodeResource(ctx.getResources(), R.mipmap.ic_launcher);
-            }
+//            Bitmap bitmap = null;
+//            try {
+//                byte[] imageString = Base64.decode(articulo.getString("imagenString"), Base64.DEFAULT);
+//                Log.d(Constants.appName, "imagenString : " + articulo.getString("imagenString").getBytes());
+//                bitmap = BitmapFactory.decodeByteArray(imageString, 0, imageString.length);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                bitmap = BitmapFactory.decodeResource(ctx.getResources(), R.mipmap.ic_launcher);
+//            }
             Articulo articuloImage;
             articuloImage = new Articulo();
             try {

@@ -18,19 +18,20 @@ public interface Constants {
     String LISTA_NEGOCIOS = "getNegocios.php";
     String UPDATE_METHOD = "update.php";
     String DELETE_METHOD = "delete.php";
+    String SAVE_IMAGE = "saveImages.php";
+    String SAVE_ITEM = "saveItem.php";
+    String GET_IMAGES = "getImages.php";
+    String UPDATE_ITEMS = "updateItem.php";
+    String UPDATE_IMAGES_ITEM = "updateImageItem.php";
+    String DELETE_IMAGES_ITEM = "deleteImageItem.php";
+
 //    public static final String URL_BASE ="http://puntodeventa-aguascalientes.rhcloud.com/mobile/rest/v1/status/";
 //    public static final String SAVE_METHOD = "post";
-    public static final String SAVE_ITEM = "saveItem";
-    public static final String SAVE_IMAGE = "saveImages";
 //    public static final String URL_BASE ="http://puntodeventa-aguascalientes.rhcloud.com/mobile/rest/v1/status/";
     public static final int NEW_ITEM = 99;
     public static final int UPDATE_ITEM = 100;
     /*Nombres de los metodos que se llaman desde la invocacion de los webservices*/
-    public static final String UPDATE_IMAGES_ITEM = "updateImageItem";
-    public static final String DELETE_IMAGES_ITEM = "deleteImageItem";
     public static final String UPDATE_IMAGES = "updateImages";
-    public static final String UPDATE_ITEMS = "updateItem";
-    public static final String GET_IMAGES = "getImages";
     public static final String GET_ARTICULOS = "getArticulos.php";
     public static final int LISTA_VACIA = 1;
     public static final int LISTA_LLENA = 2;

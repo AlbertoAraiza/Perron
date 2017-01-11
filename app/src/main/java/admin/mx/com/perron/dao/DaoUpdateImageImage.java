@@ -17,7 +17,6 @@ import org.json.JSONObject;
 
 import admin.mx.com.perron.MainActivity;
 import admin.mx.com.perron.activities.AgregarArticuloActivity;
-import admin.mx.com.perron.entities.ArticuloTemp;
 import admin.mx.com.perron.entities.Images;
 import admin.mx.com.perron.utils.Constants;
 import admin.mx.com.perron.utils.Utils;
@@ -101,7 +100,7 @@ public class DaoUpdateImageImage extends AsyncTask {
         try {
             json.put("idArticulo", images.getIdArticulo());
             json.put("idImagen", images.getIdImagen());
-            json.put("imagenString", images.getImagenString());
+            json.put("imagenString", images.getImagen());
         } catch (JSONException e) {
             System.out.println("*********************createJsonObject(Images images " + Utils.getStackTrace(e) + "******************************************************************************ERROR ON JSONOBject: ");
         }
@@ -112,7 +111,7 @@ public class DaoUpdateImageImage extends AsyncTask {
 
 
     public void callUpdateArticulo(){
-        agregarArticuloActivity.showMessage("The imageimageimage has been updated");
+        agregarArticuloActivity.showMessage("The image has been updated");
     }
 
 
