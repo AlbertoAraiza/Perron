@@ -72,19 +72,35 @@
             android:text="nombre edit_descripcion_articulos edit_descripcion_articulos edit_descripcion_articulos edit_descripcion_articulos edit_descripcion_articulos edit_descripcion_articulos"
             android:layout_below="@+id/txt_descripcion_articulos"/>
 
+        <ImageView
+            android:id="@+id/ivImagenPrincipal"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_below="@id/edit_descripcion_articulos"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_imagen_principal"
+            android:text="Cambiar Imagen Principal"
+            android:layout_toRightOf="@+id/ivImagenPrincipal"
+            android:layout_below="@id/edit_descripcion_articulos"
+            android:visibility="gone"/>
+
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btn_imagen_articulos"
             android:text="Agregar Imagen"
-            android:layout_below="@+id/edit_descripcion_articulos"/>
+            android:layout_below="@+id/ivImagenPrincipal"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btn_guardar_articulos"
             android:text="Guardar"
             android:layout_toRightOf="@+id/btn_imagen_articulos"
-            android:layout_below="@+id/edit_descripcion_articulos"/>
+            android:layout_below="@+id/ivImagenPrincipal"/>
+
         <LinearLayout
             android:id="@+id/add_imagelayout_articulos"
             android:layout_width="match_parent"

@@ -17,19 +17,26 @@ import org.json.JSONObject;
 
 import admin.mx.com.perron.MainActivity;
 import admin.mx.com.perron.activities.AgregarArticuloActivity;
+import admin.mx.com.perron.entities.Articulo;
 import admin.mx.com.perron.entities.Images;
 import admin.mx.com.perron.utils.Constants;
+import admin.mx.com.perron.utils.MyProperties;
 import admin.mx.com.perron.utils.Utils;
 
 /**
  * Created by jorge on 4/24/2016.
  */
 public class DaoUpdateImageImage extends AsyncTask {
+    private static final int UPDATE_IMAGE = 2;
+    private static final int UPDATE_MAIN_IMAGE = 22;
     AgregarArticuloActivity agregarArticuloActivity;
     private JSONObject jsonObject;
     public static final int MY_SOCKET_TIMEOUT_MS = 5000000;
     RequestQueue queue = null;
     private Context ctx;
+    private int action;
+    private int idImagen;
+    private int position;
     public DaoUpdateImageImage(Context ctx, AgregarArticuloActivity agregarArticuloActivity,
                                Images images){
         this.agregarArticuloActivity = agregarArticuloActivity;
@@ -37,6 +44,23 @@ public class DaoUpdateImageImage extends AsyncTask {
         queue = Volley.newRequestQueue(ctx);
         Log.d(Constants.appName, jsonObject.toString());
         this.ctx = ctx;
+        action = UPDATE_IMAGE;
+        this.idImagen = images.getIdImagen();
+    }
+
+    public DaoUpdateImageImage(Context ctx, AgregarArticuloActivity agregarArticuloActivity, String imgString, int idArticulo, int position) throws JSONException {
+        setJsonObject(imgString, idArticulo);
+        queue = Volley.newRequestQueue(ctx);
+        this.ctx = ctx;
+        this.agregarArticuloActivity = agregarArticuloActivity;
+        action = UPDATE_MAIN_IMAGE;
+        this.position = position;
+    }
+
+    private void setJsonObject(String imgString, int idArticulo) throws JSONException {
+        jsonObject = new JSONObject();
+        jsonObject.put("imagen", imgString);
+        jsonObject.put("idArticulo",idArticulo);
     }
 
 
@@ -44,8 +68,14 @@ public class DaoUpdateImageImage extends AsyncTask {
     protected Object doInBackground(Object[] params) {
         try {
             try {
-                String url = Constants.URL_BASE + Constants.UPDATE_IMAGES_ITEM;
-                executeRequestJson2(url);
+                if(action == UPDATE_IMAGE){
+                    String url = Constants.URL_BASE + Constants.UPDATE_IMAGES_ITEM;
+                    executeRequestJson2(url);
+                }
+                if(action == UPDATE_MAIN_IMAGE){
+                    String url = Constants.URL_BASE + Constants.UPDATE_MAIN_IMAGEN;
+                    executeRequestJson2(url);
+                }
             }catch (Exception e) {
                 MainActivity.getStackTrace(e);
                 e.printStackTrace();
@@ -67,6 +97,11 @@ public class DaoUpdateImageImage extends AsyncTask {
     @Override
     protected void onPostExecute(Object o) {
         super.onPostExecute(o);
+        if(action!=UPDATE_MAIN_IMAGE){
+            agregarArticuloActivity.actualizarImagen(this.idImagen);
+        } else {
+            agregarArticuloActivity.actualizarImagenPrincipal();
+        }
     }
     public void executeRequestJson2(String url) throws Exception{
         JsonObjectRequest jsonObjReq =
@@ -75,8 +110,18 @@ public class DaoUpdateImageImage extends AsyncTask {
 
                     @Override
                     public void onResponse(JSONObject response) {
-                        String input = response.toString();
-                        callUpdateArticulo();
+                        Articulo auxiliar = MyProperties.getInstance().articulo;
+                        String input = "hola mundo";
+                        try {
+                            input = response.getString("id");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        auxiliar.setImagen(input);
+                        MyProperties.getInstance().listaArticulos.set(position,auxiliar);
+                        MyProperties.getInstance().listItems.getAdapter().notifyDataSetChanged();
+
+                        if(action!=UPDATE_MAIN_IMAGE) callUpdateArticulo();
                     }
                 }, new Response.ErrorListener() {
 

@@ -35,6 +35,8 @@ public class ListNegociosActivity extends AdministracionMain{
             Toast.makeText(this, "registros: "+listaNegocios.size(), Toast.LENGTH_LONG).show();
             NegociosAdapter adapter = new NegociosAdapter(listaNegocios, getBaseContext());
             recList.setAdapter(adapter);
+            //agregando Recycler View a MyProperties para actualizarlo
+            MyProperties.getInstance().listNego = recList;
         }catch(Exception e){
             Log.d("Error:ListaNEgocios: ", Utils.getStackTrace(e));
         }

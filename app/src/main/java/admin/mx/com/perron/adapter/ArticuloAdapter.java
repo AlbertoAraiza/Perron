@@ -62,7 +62,7 @@ public class ArticuloAdapter extends RecyclerView.Adapter<ArticuloAdapter.MyView
                     position = getLayoutPosition();
                     Articulo articulo = (Articulo) getArticuloList().get(position);
                     Log.d(Constants.appName, "Articulo a actualizar: "+articulo.toString());
-                    DatabaseObject dao = new DatabaseObject(v.getContext(),articulo,  Constants.LISTAR_IMAGENES);
+                    DatabaseObject dao = new DatabaseObject(v.getContext(),articulo,  Constants.LISTAR_IMAGENES, position);
                     dao.execute();
                     return true;
                 }
@@ -109,7 +109,8 @@ public class ArticuloAdapter extends RecyclerView.Adapter<ArticuloAdapter.MyView
             holder.descripcion.setText(articulo.getDescripcion());
             holder.idNegocio.setText(articulo.getIdNegocio() + "");
             Picasso.with(holder.imageViewer.getContext())
-                    .load(articulo.getImagen()).placeholder(R.drawable.not_available)
+                    .load(Constants.URL_BASE+articulo.getImagen())
+                    .placeholder(R.drawable.not_available)
                     .into(holder.imageViewer);
 //            holder.imageViewer.setImageBitmap(articulo.getImageBitmap());
         }

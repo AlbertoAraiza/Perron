@@ -58,6 +58,7 @@ public class ListArticulosActivity extends AdministracionMain implements View.On
             listaArticulo =  MyProperties.getInstance().listaArticulos;
             adapter = new ArticuloAdapter(listaArticulo, getApplicationContext());
             recList.setAdapter(adapter);
+            MyProperties.getInstance().listItems = recList;
         }catch(Exception e){
             Log.d("Error:ListaNEgocios: ", Utils.getStackTrace(e));
         }
@@ -70,7 +71,9 @@ public class ListArticulosActivity extends AdministracionMain implements View.On
         coordenadas = (TextView) findViewById(R.id.coordenadas_articulos_activity);
         btnAddItem = (Button)findViewById(R.id.btn_add_item);
 
-        Picasso.with(imageNegocio.getContext()).load(negociosImage.getLogotipo()).into(imageNegocio);
+        Picasso.with(imageNegocio.getContext())
+                .load(Constants.URL_BASE+negociosImage.getLogotipo())
+                .into(imageNegocio);
         idNegocio.setText("ID Negocio: " + negociosImage.getIdNegocio());
         nombreNegocio.setText("Nombre Negocio: " + negociosImage.getNombreNegocio());
         direccion.setText("Direccion: " + negociosImage.getDireccion());
@@ -87,7 +90,4 @@ public class ListArticulosActivity extends AdministracionMain implements View.On
             startActivity(intent);
         }
     }
-
-
-
 }

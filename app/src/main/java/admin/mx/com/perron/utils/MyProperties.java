@@ -1,5 +1,7 @@
 package admin.mx.com.perron.utils;
 
+import android.support.v7.widget.RecyclerView;
+
 import java.util.List;
 
 import admin.mx.com.perron.entities.Articulo;
@@ -18,6 +20,7 @@ public class MyProperties {
     public int listaValor;
     public Articulo articulo;
     public Negocios negocio;
+    public RecyclerView listNego, listItems;
     protected MyProperties(){}
     public static synchronized MyProperties getInstance(){
         if(null == mInstance){

@@ -19,6 +19,7 @@ import admin.mx.com.perron.MainActivity;
 import admin.mx.com.perron.activities.AgregarArticuloActivity;
 import admin.mx.com.perron.entities.Articulo;
 import admin.mx.com.perron.utils.Constants;
+import admin.mx.com.perron.utils.MyProperties;
 import admin.mx.com.perron.utils.Utils;
 /**
  * Created by jorge on 3/22/2016.
@@ -31,10 +32,13 @@ public class DaoSaveArticulo extends AsyncTask {
     private Context ctx;
     private Articulo articulo;
     ProgressDialog barProgressDialog;
+    private int position;;
     public DaoSaveArticulo(Context ctx, AgregarArticuloActivity agregarArticuloActivity,
-                          Articulo articulo){
+                          Articulo articulo, int position){
+        this.position = position;
         this.agregarArticuloActivity = agregarArticuloActivity;
-        setJsonObject(articulo);
+        this.articulo = articulo;
+        setJsonObject();
         queue = Volley.newRequestQueue(ctx);
         Log.d(Constants.appName, jsonObject.toString());
         this.ctx = ctx;
@@ -73,16 +77,24 @@ public class DaoSaveArticulo extends AsyncTask {
                     public void onResponse(JSONObject response) {
 
                         String input = response.toString();
-                        String id = "";
+                        int id;
+                        String path = "";
                         JSONObject jObject = null;
                         try {
                             jObject = new JSONObject(input);
-                            id = jObject.getString("id");
+                            id = jObject.getInt("id");
+                            path = jObject.getString("imagen");
+                            articulo.setIdArticulo(id);
+                            articulo.setImagen(path);
+                            //Actualizar Recycler View
+                            MyProperties.getInstance().listaArticulos.add(articulo);
+                            MyProperties.getInstance().listItems.getAdapter().notifyDataSetChanged();
+
                             Log.d(Constants.appName, "id: "+id);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        agregarArticuloActivity.showNewImageAfterSave(agregarArticuloActivity.getPhoto(), id);
+                        agregarArticuloActivity.showNewImageAfterSave(agregarArticuloActivity.getPhoto(), path);
                     }
                 }, new Response.ErrorListener() {
 
@@ -99,12 +111,11 @@ public class DaoSaveArticulo extends AsyncTask {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(jsonObjReq);
     }
-    public void setJsonObject(Articulo object) {
-        Log.d("save articulo: ", object.toString());
-        this.jsonObject = createJsonObject(object);
+    public void setJsonObject() {
+        this.jsonObject = createJsonObject();
     }
 
-    public JSONObject createJsonObject(Articulo articulo) {
+    public JSONObject createJsonObject() {
         JSONObject json = new JSONObject();
         try {
             json.put("nombreArticulo", articulo.getNombreArticulo());

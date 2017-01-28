@@ -18,9 +18,12 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import admin.mx.com.perron.R;
@@ -44,11 +47,14 @@ import admin.mx.com.perron.utils.Utils;
  * Created by jorge on 3/17/2016.
  */
 public class AgregarArticuloActivity extends AdministracionMain implements View.OnClickListener{
+    private static final int ACTUALIZAR_IMAGEN_PRINCIPAL = 111;
     private TextView editPrecioArticulos;
     private TextView editNombreArticulos;
     private TextView editDescripcionArticulos;
     private Button btnImagenArticulos;
     private Button btnGuardarArticulos;
+    private Button btnImagenPrincipal;
+    private ImageView principal;
     private int TAKE_PHOTO_CODE = 1;
     private int RESULT_LOAD_IMG = 11;
     private int UPDATE_IMAGE = 123654;
@@ -62,10 +68,14 @@ public class AgregarArticuloActivity extends AdministracionMain implements View.
     private Bitmap photo;
     AlertDialog actions;
     private int idImagen;
+    private int position;
+    private HashMap<Integer,ImageView > mapaImagenes;
+    private boolean imagenPrincipal = false;
     public AgregarArticuloActivity() {
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        mapaImagenes = new HashMap<Integer, ImageView>();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.agregar_articulo_layout);
         initializeView();
@@ -74,9 +84,12 @@ public class AgregarArticuloActivity extends AdministracionMain implements View.
             if(extras!=null) {
                 action = (int) extras.get("action");
                 if (action== Constants.UPDATE_ITEM) {
+                    position = extras.getInt("position");
                     articulo = MyProperties.getInstance().articulo;
                     Log.d(Constants.appName, "articulo: "+articulo);
                     btnImagenArticulos.setVisibility(View.VISIBLE);
+                    btnImagenPrincipal.setVisibility(View.VISIBLE);
+
                     loadDataFromArticulo(articulo);
                 }else if (action== Constants.NEW_ITEM){
                     idNegocio = ((Long) extras.get("idNegocio")).intValue();;
@@ -89,12 +102,15 @@ public class AgregarArticuloActivity extends AdministracionMain implements View.
     public void initializeView(){
         btnImagenArticulos = (Button)findViewById(R.id.btn_imagen_articulos);
         btnGuardarArticulos = (Button)findViewById(R.id.btn_guardar_articulos);
+        btnImagenPrincipal = (Button) findViewById(R.id.btn_imagen_principal);
         btnImagenArticulos.setOnClickListener(this);
         btnGuardarArticulos.setOnClickListener(this);
+        btnImagenPrincipal.setOnClickListener(this);
         layoutImage = (LinearLayout)findViewById(R.id.add_imagelayout_articulos);
         editPrecioArticulos = (TextView) findViewById(R.id.edit_precio_articulos);
         editNombreArticulos = (TextView) findViewById(R.id.edit_nombre_articulos);
         editDescripcionArticulos = (TextView) findViewById(R.id.edit_descripcion_articulos);
+        principal = (ImageView)findViewById(R.id.ivImagenPrincipal);
         imagesList = null;
         initializeOptionPicture();
     }
@@ -105,14 +121,19 @@ public class AgregarArticuloActivity extends AdministracionMain implements View.
             actions.show();
         }else if(v==btnGuardarArticulos){
             if(saveArticulo()) {
-                btnImagenArticulos.setVisibility(View.GONE);
+//                finish();
             }else{
                 if(action == Constants.NEW_ITEM){
                     Utils.showMessage(this, this, "Por favor tome una foto del articulo ");
-                }else{//Codigo para actualizar un articulo ya existente
+                }else {
+                    //Codigo para actualizar un articulo ya existente
                     updateArticulo();
+                    finish();
                 }
             }
+        }else if(v==btnImagenPrincipal) {//actualizar imagen principal
+            imagenPrincipal =true;
+            actions.show();
         }
     }
     @Override
@@ -137,17 +158,36 @@ public class AgregarArticuloActivity extends AdministracionMain implements View.
                 imagesList = new ArrayList<String>();
             }
             //View child = getLayoutInflater().inflate(R.layout.child, null);
-            String imgString = Utils.getEncodedString(photo);
-            imagesList.add(imgString);
-            if (action == Constants.UPDATE_ITEM) {
-                saveImage(articulo.getIdArticulo(), imgString);
-            }else if(action==UPDATE_IMAGE){
-                selectImageUpdateItem(imgString);
-            }else if(action==ACTUALIZAR_IMAGEN ){//actualizar imagen de la tabla imagenes
-                actualizarImagenImagen(imgString, idImagen );
+            if(resultCode == RESULT_OK) {
+                String imgString = Utils.getEncodedString(photo);
+                imagesList.add(imgString);
+                if (imagenPrincipal) {
+                    imagenPrincipal = false;
+                    actualizarImagenPrincipal(imgString);
+                }else if (action == Constants.UPDATE_ITEM) {
+                    saveImage(articulo.getIdArticulo(), imgString);
+                } else if (action == UPDATE_IMAGE) {
+                    selectImageUpdateItem(imgString);
+                } else if (action == ACTUALIZAR_IMAGEN) {//actualizar imagen de la tabla imagenes
+                    actualizarImagenImagen(imgString, idImagen);
+                } else if (action == Constants.NEW_ITEM){
+                    principal.setImageBitmap(photo);
+                }
+
             }
         }
     }
+
+    private void actualizarImagenPrincipal(String imgString) {
+        DaoUpdateImageImage daoUpdateImageImage = null;
+        try {
+            daoUpdateImageImage = new DaoUpdateImageImage(this, this, imgString,articulo.getIdArticulo(), position);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        daoUpdateImageImage.execute();
+    }
+
     public View getNewImage(Bitmap picture, final String id){
         LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
         View inflatedLayout= inflater.inflate(R.layout.image_row_layout, null, false);
@@ -177,8 +217,9 @@ public class AgregarArticuloActivity extends AdministracionMain implements View.
             art.setDescripcion(editDescripcionArticulos.getText().toString());
             art.setImagen(imagesList.get(0));
             art.setIdNegocio(idNegocio);
-            DaoSaveArticulo daoArticulo = new DaoSaveArticulo(getApplicationContext(), this, art);
+            DaoSaveArticulo daoArticulo = new DaoSaveArticulo(getApplicationContext(), this, art, position);
             daoArticulo.execute();
+
             return true;
         }
     }
@@ -188,6 +229,9 @@ public class AgregarArticuloActivity extends AdministracionMain implements View.
         editPrecioArticulos.setText(String.valueOf(articulo.getPrecio()));
         editNombreArticulos.setText(articulo.getNombreArticulo());
         editDescripcionArticulos.setText(articulo.getDescripcion());
+        Picasso.with(principal.getContext())
+                .load(Constants.URL_BASE+articulo.getImagen())
+                .placeholder(R.drawable.not_available).into(principal);
 //        View child = getNewImage(articulo.getImageBitmap(), articulo.getIdArticulo()+"");
 //        layoutImage.addView(child);
         getListaImages();
@@ -210,7 +254,7 @@ public class AgregarArticuloActivity extends AdministracionMain implements View.
         if(art==null) {
             return false;
         }else{
-            DaoArticulo daoArticulo = new DaoArticulo(getApplicationContext(), Constants.ACTUALIZAR_ARTICULO);
+            DaoArticulo daoArticulo = new DaoArticulo(getApplicationContext(), Constants.ACTUALIZAR_ARTICULO, position);
             daoArticulo.actualizarArticulo(art);
             return true;
         }
@@ -238,9 +282,9 @@ public class AgregarArticuloActivity extends AdministracionMain implements View.
         LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
         View inflatedLayout= inflater.inflate(R.layout.image_row_layout, null, false);
         ImageView image = (ImageView)inflatedLayout.findViewById(R.id.id_image_update_articulo);
-//        image.setImageBitmap(picture);
+        mapaImagenes.put(Integer.valueOf(idImagen), image);
         Picasso.with(image.getContext())
-                .load(picture)
+                .load(Constants.URL_BASE+picture)
                 .placeholder(R.drawable.not_available)
                 .into(image);
         Button btnDeleteArticulos = (Button)inflatedLayout.findViewById(R.id.btn_delete_articulos);
@@ -248,9 +292,9 @@ public class AgregarArticuloActivity extends AdministracionMain implements View.
         btnUpdateArticulos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "AGREGAR idImagen principal, idArticulo: " + idImagen, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "AGREGAR idImagen principal, idArticulo: " + idImagen+", id: ", Toast.LENGTH_SHORT).show();
                 setIdImagen(idImagen);
-                action = ACTUALIZAR_IMAGEN ;
+                action = ACTUALIZAR_IMAGEN;
                 actions.show();
             }
         });
@@ -277,20 +321,21 @@ public class AgregarArticuloActivity extends AdministracionMain implements View.
         return photo;
     }
     public void showNewImageAfterSave(Bitmap picture, final String id){
-        LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
-        View inflatedLayout= inflater.inflate(R.layout.image_row_layout, null, false);
-        ImageView image = (ImageView)inflatedLayout.findViewById(R.id.id_image_update_articulo);
-        image.setImageBitmap(picture);
-        Button btnDeleteArticulos = (Button)inflatedLayout.findViewById(R.id.btn_delete_articulos);
-        Button btnUpdateArticulos = (Button)inflatedLayout.findViewById(R.id.btn_update_articulos);
-        btnUpdateArticulos.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "AGREGAR idImagen principal, idArticulo: " + id, Toast.LENGTH_SHORT).show();
-            }
-        });
-        layoutImage.addView(inflatedLayout);
-        action= Constants.UPDATE_ITEM;
+//        LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
+//        View inflatedLayout= inflater.inflate(R.layout.image_row_layout, null, false);
+//        ImageView image = (ImageView)inflatedLayout.findViewById(R.id.id_image_update_articulo);
+//        image.setImageBitmap(picture);
+//        Button btnDeleteArticulos = (Button)inflatedLayout.findViewById(R.id.btn_delete_articulos);
+//        Button btnUpdateArticulos = (Button)inflatedLayout.findViewById(R.id.btn_update_articulos);
+//        btnUpdateArticulos.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(getApplicationContext(), "AGREGAR idImagen principal, idArticulo: " + id, Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//        layoutImage.addView(inflatedLayout);
+//        action= Constants.UPDATE_ITEM;
+        finish();
     }
     public void showNewImageAfterSaveImg( final String id){
         LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
@@ -403,4 +448,12 @@ public class AgregarArticuloActivity extends AdministracionMain implements View.
         DaoDeleteImageImage dao = new DaoDeleteImageImage(this, this, images);
         dao.execute();
     }//END actualizarImagenImagen
+    public void actualizarImagen(int idImagen){
+            ImageView image = mapaImagenes.get(Integer.valueOf(idImagen));
+            image.setImageBitmap(getPhoto());
+    }
+
+    public void actualizarImagenPrincipal() {
+        principal.setImageBitmap(getPhoto());
+    }
 }//llave principal de la clase

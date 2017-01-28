@@ -1,11 +1,7 @@
 package admin.mx.com.perron.dao;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.util.Base64;
 import android.util.Log;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -15,24 +11,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.gson.Gson;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import admin.mx.com.perron.MainActivity;
-import admin.mx.com.perron.R;
 import admin.mx.com.perron.activities.AgregarArticuloActivity;
-import admin.mx.com.perron.entities.Articulo;
 import admin.mx.com.perron.entities.ArticuloTemp;
-import admin.mx.com.perron.entities.Images;
-import admin.mx.com.perron.otto.ImagesItems;
 import admin.mx.com.perron.utils.Constants;
-import admin.mx.com.perron.utils.MyProperties;
 import admin.mx.com.perron.utils.Utils;
 public class DaoUpdateImageArticulo extends AsyncTask {
     AgregarArticuloActivity agregarArticuloActivity;

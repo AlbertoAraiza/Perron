@@ -57,7 +57,7 @@ public class NegociosAdapter extends RecyclerView.Adapter<NegociosAdapter.Negoci
     public void onBindViewHolder(NegocioViewHolder holder, int position) {
         Negocios negocio = negociosList.get(position);
         Picasso.with(mContext)
-                .load(negocio.getLogotipo())
+                .load(Constants.URL_BASE+negocio.getLogotipo())
                 .error(R.drawable.not_available)
                 .into(holder.vLogotipo);
         holder.vNombreNegocio.setText(negocio.getNombreNegocio());
@@ -159,7 +159,7 @@ public class NegociosAdapter extends RecyclerView.Adapter<NegociosAdapter.Negoci
 //                        art.setNombreArticulo("nombre");
                         art.setIdNegocio(idNegocio);
 //                        art.setImageCode("imagen");
-                        DaoArticulo daoArticulo = new DaoArticulo( getmContext(), Constants.LISTAR_ARTICULOS);
+                        DaoArticulo daoArticulo = new DaoArticulo( getmContext(), Constants.LISTAR_ARTICULOS, position);
                         daoArticulo.getListaArticulo(art);
                     } catch (Exception e) {
                         Log.d("Error:NegociosAdapter: ", Utils.getStackTrace(e));

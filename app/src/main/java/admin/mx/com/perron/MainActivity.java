@@ -1,5 +1,6 @@
 package admin.mx.com.perron;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -13,7 +14,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.format.Formatter;
 import android.util.Log;
@@ -40,6 +40,8 @@ import java.util.List;
 
 import admin.mx.com.perron.entities.Negocios;
 import admin.mx.com.perron.logic.RealPathUtil;
+import admin.mx.com.perron.utils.ASFUriHelper;
+import admin.mx.com.perron.utils.AbsRuntimePermission;
 import admin.mx.com.perron.utils.CheckPermission;
 import admin.mx.com.perron.utils.Constants;
 import admin.mx.com.perron.utils.CropSquareTransformation;
@@ -47,7 +49,7 @@ import admin.mx.com.perron.utils.GPSTracker;
 import admin.mx.com.perron.utils.MyProperties;
 import admin.mx.com.perron.utils.Utils;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AbsRuntimePermission implements View.OnClickListener {
     EditText edtNombreNegocio;
     EditText edtDireccion;
     EditText edtCoordenadas;
@@ -66,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ImageView imgView;
     String realPath;
     private int option = 999;
+    int position;
     private Negocios negociosImage;
     private GPSTracker gps;
 
@@ -74,14 +77,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (Build.VERSION.SDK_INT >= 23) {
-            if(CheckPermission.checkPermissionForGPS(this)){
+            int op = PackageManager.PERMISSION_GRANTED;
+            if(checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != op ||
+                    checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != op ||
+                    checkSelfPermission(Manifest.permission.CAMERA) != op)
+                requestAppPermissions();
+            else
                 onCreate2();
-            }else{
-                CheckPermission.requestPermissionForGPS(this);
-            }
+//            if(CheckPermission.checkPermissionForGPS(this)){
+//                onCreate2();
+//            } else {
+//                CheckPermission.requestPermissionForGPS(this);
+//            }
         } else {
             onCreate2();
         }
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode) {
+
     }
 
     public void onCreate2(){
@@ -97,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if(option== Constants.ACTUALIZAR){
                 TextView textTitulo = (TextView) findViewById(R.id.titulo);
                 textTitulo.setText("Modificar Negocio");
-                int position = extras.getInt("position");
+                this.position = extras.getInt("position");
                 List<Negocios> listaNegocios = MyProperties.getInstance().listaNegocios;
                 negociosImage = listaNegocios.get(position);
                 setValues(negociosImage);
@@ -157,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         edtCoordenadas.setText(negociosImage.getCoordenadas());
         //thumbnail = negociosImage.getLogotipo();
         Picasso.with(getApplicationContext())
-                .load(negociosImage.getLogotipo())
+                .load(Constants.URL_BASE+negociosImage.getLogotipo())
                 .error(R.drawable.not_available)
                 .into(imgView);
     }
@@ -197,7 +212,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         res.setNombreNegocio(edtNombreNegocio.getText().toString());
         res.setCoordenadas(edtCoordenadas.getText().toString());
         res.setDireccion(edtDireccion.getText().toString());
-        res.setLogotipo(edtLogotipo.getText().toString());
+//        if (thumbnail != null)
+        res.setLogotipo(negociosImage.getLogotipo());
         res.setIdNegocio(negociosImage.getIdNegocio());
         Log.d("Update: ", res.toString());
         return res;
@@ -231,8 +247,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     String message = Utils.convertGson(nego);
                     //executeRequestJson2(message);
                     if (thumbnail != null) {
-                        FtpCliente ftp = new FtpCliente(getApplicationContext(), this, thumbnail, getJsonObject2(), option);
+                        FtpCliente ftp = new FtpCliente(getApplicationContext(), this, thumbnail, getJsonObject2(), option, position);
                         ftp.execute();
+//                        finish();
                     } else {
                         nuevoSnack("Please select an image first that all");
                     }
@@ -242,13 +259,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Negocios nego = createNegocioUpdate();
                     String message = Utils.convertGson(nego);
                     //executeRequestJson2(message);
-                    if (thumbnail != null) {
-                        FtpCliente ftp = new FtpCliente(getApplicationContext(), this, thumbnail, getJsonObject2(), option);
-                        ftp.execute();
-                    } else {
-                        nuevoSnack("Please select an image first that all");
-                    }
+//                    if (thumbnail == null)
+                    FtpCliente ftp = new FtpCliente(getApplicationContext(), this, thumbnail, getJsonObject2(), option, position);
+                    ftp.execute();
+
+//                    finish();
+//                    } else {
+//                        nuevoSnack("Please select an image first that all");
+//                    }
                 }
+
             }
         }else if (btnChooseImage == v) {
             chooseImage();
@@ -293,8 +313,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     realPath = RealPathUtil.getRealPathFromURI_BelowAPI11(this, data.getData());
                 } else if (Build.VERSION.SDK_INT < 19) {// SDK >= 11 && SDK < 19
                     realPath = RealPathUtil.getRealPathFromURI_API11to18(this, data.getData());
-                } else{// SDK > 19 (Android 4.4)
+                } else if (Build.VERSION.SDK_INT == 19){// SDK > 19 (Android 4.4)
                     realPath = RealPathUtil.getRealPathFromURI_API19(this, data.getData());
+                } else {
+                    realPath = ASFUriHelper.getPath(this, data.getData());
                 }
                 File imageFile = new File(realPath);
                 Uri uriFromPath = Uri.fromFile(imageFile);
@@ -327,9 +349,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 json.put("idNegocio", negociosImage.getIdNegocio());
                 Toast.makeText(this, String.valueOf(negociosImage.getIdNegocio()), Toast.LENGTH_LONG).show();
             }
-
-            String imagen = Utils.getEncodedString(thumbnail);
-            json.put("logotipo", imagen);
+            if(thumbnail!=null) {
+                String imagen = Utils.getEncodedString(thumbnail);
+                json.put("logotipo", imagen);
+            }
 
         } catch (JSONException e) {
             System.out.println("******************************************************************************ERROR ON JSONOBject: " + getStackTrace(e) + "******************************************************************************ERROR ON JSONOBject: ");

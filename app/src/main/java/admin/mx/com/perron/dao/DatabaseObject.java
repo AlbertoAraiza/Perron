@@ -43,8 +43,12 @@ public class DatabaseObject extends AsyncTask {
     int op;
     private Context ctx;
     private Articulo articulo;
+    private int position;
     public DatabaseObject(Context ctx, AgregarArticuloActivity agregarArticuloActivity,
-                           Articulo articulo, int op){
+                           Articulo articulo, int op, int position ){
+        //pruebas
+        this.position = position;
+
         this.agregarArticuloActivity = agregarArticuloActivity;
         setJsonObject(articulo);
         queue = Volley.newRequestQueue(ctx);
@@ -53,7 +57,8 @@ public class DatabaseObject extends AsyncTask {
         this.ctx = ctx;
     }
 
-    public DatabaseObject(Context ctx, Articulo articulo, int op){
+    public DatabaseObject(Context ctx, Articulo articulo, int op, int position){
+        this.position = position;
         if(op == Constants.LISTAR_IMAGENES){
             setJsonObject2(articulo);
         }else if(op == Constants.GUARDAR_ARTICULO){
@@ -135,6 +140,11 @@ public class DatabaseObject extends AsyncTask {
                     @Override
                     public void onResponse(JSONObject response) {
                         String input = response.toString();
+                        if(op == Constants.ACTUALIZAR_ARTICULO){
+                            //Actualizando RecyclerView
+                            MyProperties.getInstance().listaArticulos.set(position,articulo);
+                            MyProperties.getInstance().listItems.getAdapter().notifyDataSetChanged();
+                        }
                     }
                 }, new Response.ErrorListener() {
 
@@ -202,7 +212,7 @@ public class DatabaseObject extends AsyncTask {
         try {
             json.put("idNegocio", articulo.getIdNegocio());
             json.put("idArticulo", articulo.getIdArticulo());
-            json.put("idImagen", articulo.getIdArticulo());
+            json.put("idImagen", articulo.getImagen());
             json.put("imagenString", articulo.getIdArticulo()+"");
 
         } catch (JSONException e) {
@@ -217,6 +227,7 @@ public class DatabaseObject extends AsyncTask {
     }
     public JSONObject createJsonObject3(Articulo articulo) {
         JSONObject json = new JSONObject();
+
         try {
             json.put("nombreArticulo", articulo.getNombreArticulo());
             json.put("precio", articulo.getPrecio());
@@ -326,7 +337,8 @@ public class DatabaseObject extends AsyncTask {
 //        Utils.getBus().post("created lista articulos");
         Intent i = new Intent(ctx, ListArticulosActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        i.putExtra("position",articulo.getIdNegocio());
+        i.putExtra("position", position);
+//        i.putExtra("position",articulo.getIdNegocio());
         ctx.startActivity(i);
 
     }
@@ -411,6 +423,7 @@ public class DatabaseObject extends AsyncTask {
     public void callUpdateArticulo(){
         Intent intent = new Intent(this.ctx, AgregarArticuloActivity.class);
         intent.putExtra("action", Constants.UPDATE_ITEM);
+        intent.putExtra("position", position);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         this.ctx.startActivity(intent);
     }

@@ -1,12 +1,9 @@
 package admin.mx.com.perron;
-import android.annotation.TargetApi;
+
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.os.Build;
-import android.os.Environment;
 import android.util.Log;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -16,23 +13,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.gson.Gson;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import admin.mx.com.perron.entities.Negocios;
 import admin.mx.com.perron.utils.Constants;
-import admin.mx.com.perron.utils.CropSquareTransformation;
+import admin.mx.com.perron.utils.MyProperties;
 import admin.mx.com.perron.utils.Utils;
-import it.sauronsoftware.ftp4j.FTPClient;
-import it.sauronsoftware.ftp4j.FTPDataTransferListener;
-
-import static android.graphics.Bitmap.CompressFormat.WEBP;
 
 /**
  * Created by Jorge on 04/nov/2015.
@@ -46,11 +34,12 @@ class FtpCliente extends AsyncTask {
     private JSONObject jsonObject;
     public static final int MY_SOCKET_TIMEOUT_MS = 5000;
     RequestQueue queue = null;
-    int op;
-    public FtpCliente(Context ctx, MainActivity ftpUpload, Bitmap bitmap, JSONObject jsonObject, int op){
+    int op, position;
+    public FtpCliente(Context ctx, MainActivity ftpUpload, Bitmap bitmap, JSONObject jsonObject, int op, int position){
         this.ctx = ctx;
         this.ftpUpload = ftpUpload;
         this.bitmap = bitmap;
+        this.position = position;
         setJsonObject(jsonObject);
         queue = Volley.newRequestQueue(ctx);
         Log.d("Save or update:",jsonObject.toString());
@@ -84,13 +73,11 @@ class FtpCliente extends AsyncTask {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        progressDialog= ProgressDialog.show(ftpUpload, "Uploading image to the server","Uploading ....", true);
     }
 
     @Override
     protected void onPostExecute(Object o) {
         super.onPostExecute(o);
-        progressDialog.dismiss();
     }
     public void executeRequestJson2(String url) throws Exception{
 
@@ -100,8 +87,25 @@ class FtpCliente extends AsyncTask {
 
             @Override
             public void onResponse(JSONObject response) {
+                MyProperties myProperties = MyProperties.getInstance();
+                String input = "Hola Mundo";
+//                String input = response.toString();
+                if(op == Constants.ACTUALIZAR) {
+                    try {
+                        if(bitmap != null){
+                            input = response.getString("id");
+                        } else {
+                             input = myProperties.listaNegocios.get(position).getLogotipo();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    Negocios nego = ftpUpload.createNegocioUpdate();
+                    nego.setLogotipo(input);
 
-                    String input = response.toString();
+                    myProperties.listaNegocios.set(position, nego);
+                    myProperties.listNego.getAdapter().notifyDataSetChanged();
+                }
 
             }
         }, new Response.ErrorListener() {

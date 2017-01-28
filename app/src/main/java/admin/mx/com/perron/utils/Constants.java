@@ -13,8 +13,11 @@ public interface Constants {
     public static final int LISTAR_ARTICULOS = 5;
     public static final int LISTAR_IMAGENES = 6;
     public static final int ACTUALIZAR_ARTICULO = 7;
-    String URL_BASE ="http://10.0.0.4/picouWeb/public_html/php/";
-    String SAVE_METHOD = "agregarNegocio.php";
+//    String URL_BASE ="http://192.168.0.11/picouWeb/public_html/php/";
+    String URL_BASE ="http://picou.jvmhost.net/mavenproject1-1.0-SNAPSHOT/rest/v1/status/";
+//    String URL_BASE ="http://picou.000webhostapp.com/php/";
+    //String SAVE_METHOD = "agregarNegocio.php";
+    String SAVE_METHOD = "post";
     String LISTA_NEGOCIOS = "getNegocios.php";
     String UPDATE_METHOD = "update.php";
     String DELETE_METHOD = "delete.php";
@@ -24,6 +27,7 @@ public interface Constants {
     String UPDATE_ITEMS = "updateItem.php";
     String UPDATE_IMAGES_ITEM = "updateImageItem.php";
     String DELETE_IMAGES_ITEM = "deleteImageItem.php";
+    String UPDATE_MAIN_IMAGEN = "updateMainImage.php";
 
 //    public static final String URL_BASE ="http://puntodeventa-aguascalientes.rhcloud.com/mobile/rest/v1/status/";
 //    public static final String SAVE_METHOD = "post";
@@ -35,5 +39,6 @@ public interface Constants {
     public static final String GET_ARTICULOS = "getArticulos.php";
     public static final int LISTA_VACIA = 1;
     public static final int LISTA_LLENA = 2;
+
 }
 

@@ -76,7 +76,7 @@ public class ListaResultado extends AsyncTask {
     }
     public void executeRequestJson2(String data) throws Exception{
         String url = Constants.URL_BASE+Constants.LISTA_NEGOCIOS;
-        StringRequest stringReq = null;
+        StringRequest stringReq;
         stringReq = new StringRequest(Request.Method.POST,
                 url, new Response.Listener<String>() {
             @Override
@@ -128,7 +128,6 @@ public class ListaResultado extends AsyncTask {
         List<Negocios> listaTemporal = new ArrayList<Negocios>();
         for(int i=0;i<listaNegocios.size();i++){
             Negocios neg = (Negocios)listaNegocios.get(i);
-
             Negocios negociosImage;
             negociosImage = new Negocios();
             negociosImage.setIdNegocio(neg.getIdNegocio());
