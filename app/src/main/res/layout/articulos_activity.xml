@@ -23,7 +23,7 @@
             android:id="@+id/nombre_negocio_articulos_activity"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:layout_toRightOf="@id/id_articulos_activity"
+            android:layout_toRightOf="@id/image_negocio_articulos_activity"
             android:text="nombre negocio"
             android:layout_below="@id/id_articulos_activity"
             />
