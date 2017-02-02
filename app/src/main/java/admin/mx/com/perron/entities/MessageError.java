@@ -1,5 +1,8 @@
 package admin.mx.com.perron.entities;
 
+import android.content.Context;
+import android.widget.Toast;
+
 /**
  * Created by jorge on 2/2/2017.
  */
@@ -28,5 +31,9 @@ public class MessageError {
 
     public void setResult(boolean result) {
         this.result = result;
+    }
+
+    public void show (Context ctx){
+        Toast.makeText(ctx, message, Toast.LENGTH_LONG).show();
     }
 }

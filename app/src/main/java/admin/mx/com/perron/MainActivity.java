@@ -38,6 +38,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.List;
 
+import admin.mx.com.perron.entities.MessageError;
 import admin.mx.com.perron.entities.Negocios;
 import admin.mx.com.perron.logic.RealPathUtil;
 import admin.mx.com.perron.utils.ASFUriHelper;
@@ -218,9 +219,8 @@ public class MainActivity extends AbsRuntimePermission implements View.OnClickLi
         Log.d("Update: ", res.toString());
         return res;
     }
-    public void mostrarMesaje(String message) {
-        textResult.setText(message.toString());
-        edtResponse.setText(message.toString());
+    public void mostrarMesaje(MessageError messageError) {
+        Toast.makeText(gps, messageError.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
 
@@ -249,7 +249,7 @@ public class MainActivity extends AbsRuntimePermission implements View.OnClickLi
                     if (thumbnail != null) {
                         FtpCliente ftp = new FtpCliente(getApplicationContext(), this, thumbnail, getJsonObject2(), option, position);
                         ftp.execute();
-//                        finish();
+                        finish();
                     } else {
                         nuevoSnack("Please select an image first that all");
                     }
@@ -262,6 +262,7 @@ public class MainActivity extends AbsRuntimePermission implements View.OnClickLi
 //                    if (thumbnail == null)
                     FtpCliente ftp = new FtpCliente(getApplicationContext(), this, thumbnail, getJsonObject2(), option, position);
                     ftp.execute();
+                    finish();
 
 //                    finish();
 //                    } else {
