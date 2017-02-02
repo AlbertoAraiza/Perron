@@ -79,7 +79,7 @@ public class Negocios implements Parcelable {
 
     @Override
     public String toString() {
-        return "idNegocio: "+getIdNegocio()+", nombreNegocio: "+getNombreNegocio()+", direccion: "+getDireccion()+", coordenadas: "+getCoordenadas()+", logotipo"+getLogotipo();
+        return "idNegocio: "+getIdNegocio()+", nombreNegocio: "+getNombreNegocio()+", direccion: "+getDireccion()+", coordenadas: "+getCoordenadas()+", logotipo:"+getLogotipo();
     }
 
 

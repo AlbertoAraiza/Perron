@@ -13,12 +13,14 @@ public interface Constants {
     public static final int LISTAR_ARTICULOS = 5;
     public static final int LISTAR_IMAGENES = 6;
     public static final int ACTUALIZAR_ARTICULO = 7;
-//    String URL_BASE ="http://192.168.0.11/picouWeb/public_html/php/";
-    String URL_BASE ="http://picou.jvmhost.net/mavenproject1-1.0-SNAPSHOT/rest/v1/status/";
+    String URL_HOST = "http://192.168.0.5:8080/mavenproject1-1.0-SNAPSHOT";
+    String URL_BASE = URL_HOST+"/rest/v1/status/";
+    String URL_HOST_IMAGES = URL_HOST+"/images/";
+    //String URL_BASE ="http://picou.jvmhost.net/mavenproject1-1.0-SNAPSHOT/rest/v1/status/";
 //    String URL_BASE ="http://picou.000webhostapp.com/php/";
     //String SAVE_METHOD = "agregarNegocio.php";
     String SAVE_METHOD = "post";
-    String LISTA_NEGOCIOS = "getNegocios.php";
+    String LISTA_NEGOCIOS = "getNegocios";
     String UPDATE_METHOD = "update.php";
     String DELETE_METHOD = "delete.php";
     String SAVE_IMAGE = "saveImages.php";

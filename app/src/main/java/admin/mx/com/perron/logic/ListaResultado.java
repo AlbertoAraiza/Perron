@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import admin.mx.com.perron.activities.MenuMain;
+import admin.mx.com.perron.entities.MessageError;
 import admin.mx.com.perron.entities.Negocios;
 import admin.mx.com.perron.utils.Constants;
 import admin.mx.com.perron.utils.Utils;
@@ -71,9 +72,6 @@ public class ListaResultado extends AsyncTask {
         progressDialog.dismiss();
     }
 
-    public void setJsonObject(JSONObject jsonObject) {
-        this.jsonObject = jsonObject;
-    }
     public void executeRequestJson2(String data) throws Exception{
         String url = Constants.URL_BASE+Constants.LISTA_NEGOCIOS;
         StringRequest stringReq;
@@ -103,41 +101,31 @@ public class ListaResultado extends AsyncTask {
             }
         });
         stringReq.setRetryPolicy(new DefaultRetryPolicy(
-                MY_SOCKET_TIMEOUT_MS,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        MY_SOCKET_TIMEOUT_MS,
+        DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+        DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(stringReq);
-    }
-    public JSONObject actualizarNegocio2(){
-        JSONObject json2 = new JSONObject();
-        try {
-            json2.put("nombreNegocio", "nombre");
-            json2.put("direccion", "direccion");
-            json2.put("coordenadas", "coordenadas");
-            json2.put("logotipo", "logotipo");
-        }catch (JSONException e) {
-            System.out.println("******************************************************************************ERROR ON JSONOBject: ");
-        }
-        Log.d(Constants.appName, json2.toString());
-        return json2;
     }
     public void getListaNegocios(String listaNegocio) {
         Gson gson = new Gson();
-        List<Negocios> listaNegocios = gson.fromJson(listaNegocio, new TypeToken<List<Negocios>>(){}.getType());
-
-        List<Negocios> listaTemporal = new ArrayList<Negocios>();
-        for(int i=0;i<listaNegocios.size();i++){
-            Negocios neg = (Negocios)listaNegocios.get(i);
-            Negocios negociosImage;
-            negociosImage = new Negocios();
-            negociosImage.setIdNegocio(neg.getIdNegocio());
-            negociosImage.setDireccion(neg.getDireccion());
-            negociosImage.setCoordenadas(neg.getCoordenadas());
-            negociosImage.setLogotipo(neg.getLogotipo());
-            negociosImage.setNombreNegocio(neg.getNombreNegocio());
-            listaTemporal.add(negociosImage);
-            Log.d(Constants.appName, neg.toString());
+        try{
+            List<Negocios> listaNegocios = gson.fromJson(listaNegocio, new TypeToken<List<Negocios>>(){}.getType());
+            Log.d(Constants.appName, "listaNegocio: "+listaNegocio);
+            List<Negocios> listaTemporal = new ArrayList<Negocios>();
+            for(int i=0;i<listaNegocios.size();i++){
+                Negocios neg = (Negocios)listaNegocios.get(i);
+                listaTemporal.add(neg);
+                Log.d(Constants.appName, neg.toString());
+            }
+            ma.loadListNegocios(listaTemporal);
+        }catch(Exception e){
+            try {
+                MessageError messageError = gson.fromJson(listaNegocio, MessageError.class);
+                ma.showError(messageError);
+            }catch(Exception ex){
+                MessageError messageError = new MessageError("Error inesperado: "+ex.getMessage(), false);
+                ma.showError(messageError);
+            }
         }
-        ma.loadListNegocios(listaTemporal);
     }
 }

@@ -13,11 +13,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
 import admin.mx.com.perron.MainActivity;
 import admin.mx.com.perron.R;
+import admin.mx.com.perron.entities.MessageError;
 import admin.mx.com.perron.entities.Negocios;
 import admin.mx.com.perron.logic.ListaResultado;
 import admin.mx.com.perron.utils.Constants;
@@ -106,5 +108,9 @@ public class MenuMain extends AdministracionMain implements View.OnClickListener
         }catch(Exception e ){
             Log.d("Error-loadListNegocios:", Utils.getStackTrace(e));
         }
+    }
+
+    public void showError(MessageError messageError){
+        Toast.makeText(getApplicationContext(), messageError.getMessage(), Toast.LENGTH_LONG).show();
     }
 }

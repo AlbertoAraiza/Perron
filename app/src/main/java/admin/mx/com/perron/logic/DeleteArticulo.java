@@ -25,39 +25,36 @@ public class DeleteArticulo extends AsyncTask{
     RequestQueue queue = null;
     Negocios negociosImage;
 
-
-
-
-        public DeleteArticulo(Context ctx, Negocios negociosImage){
-            this.ctx = ctx;
-            queue = Volley.newRequestQueue(ctx);
-            this.negociosImage = negociosImage;
+    public DeleteArticulo(Context ctx, Negocios negociosImage){
+        this.ctx = ctx;
+        queue = Volley.newRequestQueue(ctx);
+        this.negociosImage = negociosImage;
+    }
+    @Override
+    protected Object doInBackground(Object[] params) {
+        try {
+            Log.d(Constants.appName, "doInBackground");
+            String url = Constants.URL_BASE + Constants.DELETE_METHOD;
+            executeRequestJson2(url);
+        }catch (Exception e) {
+            StringBuffer errorMsg = new StringBuffer(Utils.getStackTrace(e));
+            Utils.setGlobalMessage(errorMsg);
+            return false;
         }
-        @Override
-        protected Object doInBackground(Object[] params) {
-            try {
-                Log.d(Constants.appName, "doInBackground");
-                String url = Constants.URL_BASE + Constants.DELETE_METHOD;
-                executeRequestJson2(url);
-            }catch (Exception e) {
-                StringBuffer errorMsg = new StringBuffer(Utils.getStackTrace(e));
-                Utils.setGlobalMessage(errorMsg);
-                return false;
-            }
-            return true;
-        }
+        return true;
+    }
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            Log.d(Constants.appName, "Creating windows to show progress of activity");
-        }
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        Log.d(Constants.appName, "Creating windows to show progress of activity");
+    }
 
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            Log.d(Constants.appName, "DEstroying window to show progress of activity");
-        }
+    @Override
+    protected void onPostExecute(Object o) {
+        super.onPostExecute(o);
+        Log.d(Constants.appName, "DEstroying window to show progress of activity");
+    }
 
 
     public void executeRequestJson2(String url) throws Exception{
