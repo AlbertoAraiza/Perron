@@ -221,6 +221,7 @@ public class MainActivity extends AbsRuntimePermission implements View.OnClickLi
     }
     public void mostrarMesaje(MessageError messageError) {
         Toast.makeText(getApplicationContext(), messageError.getMessage(), Toast.LENGTH_SHORT).show();
+        finish();
     }
 
 
