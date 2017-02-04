@@ -131,6 +131,9 @@ class FtpCliente extends AsyncTask {
                 public void onErrorResponse(VolleyError error) {
 
                 System.out.println("ERROR ON onErrorResponse: "+Utils.getStackTrace(error));
+                    MessageError messageError = new MessageError("Error volley: "+
+                            error.getMessage(), false);
+                    ftpUpload.mostrarMesaje(messageError);
             }
         });
         jsonObjReq.setRetryPolicy(new DefaultRetryPolicy(

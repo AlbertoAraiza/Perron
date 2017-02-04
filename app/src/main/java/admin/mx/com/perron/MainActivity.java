@@ -173,7 +173,7 @@ public class MainActivity extends AbsRuntimePermission implements View.OnClickLi
         edtCoordenadas.setText(negociosImage.getCoordenadas());
         //thumbnail = negociosImage.getLogotipo();
         Picasso.with(getApplicationContext())
-                .load(Constants.URL_BASE+negociosImage.getLogotipo())
+                .load(Constants.URL_HOST_IMAGES+negociosImage.getLogotipo())
                 .error(R.drawable.not_available)
                 .into(imgView);
     }
@@ -220,7 +220,7 @@ public class MainActivity extends AbsRuntimePermission implements View.OnClickLi
         return res;
     }
     public void mostrarMesaje(MessageError messageError) {
-        Toast.makeText(gps, messageError.getMessage(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), messageError.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
 
@@ -249,7 +249,6 @@ public class MainActivity extends AbsRuntimePermission implements View.OnClickLi
                     if (thumbnail != null) {
                         FtpCliente ftp = new FtpCliente(getApplicationContext(), this, thumbnail, getJsonObject2(), option, position);
                         ftp.execute();
-                        finish();
                     } else {
                         nuevoSnack("Please select an image first that all");
                     }
@@ -262,7 +261,6 @@ public class MainActivity extends AbsRuntimePermission implements View.OnClickLi
 //                    if (thumbnail == null)
                     FtpCliente ftp = new FtpCliente(getApplicationContext(), this, thumbnail, getJsonObject2(), option, position);
                     ftp.execute();
-                    finish();
 
 //                    finish();
 //                    } else {
