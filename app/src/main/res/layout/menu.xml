@@ -3,7 +3,7 @@
     android:layout_height="match_parent"
     android:padding="16dp"
     android:orientation="vertical"
-    >
+    android:background="#000">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -33,6 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp"
+            android:background="@color/colorPrimary"
             >
 
             <ImageView
@@ -40,7 +41,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginRight="16dp"
-                android:src="@drawable/vochito"
+                android:src="@drawable/ic_add_white_48dp"
                 android:layout_width="60dp"
                 android:layout_height="80dp"
                 />
@@ -81,7 +82,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp"
-            >
+            android:background="@color/colorPrimary">
 
             <ImageView
                 android:layout_width="60dp"
@@ -90,7 +91,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginRight="16dp"
-                android:src="@drawable/vochito"
+                android:src="@drawable/ic_business_white_48dp"
                 />
 
             <TextView
