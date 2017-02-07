@@ -38,6 +38,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.List;
 
+import admin.mx.com.perron.entities.MessageError;
 import admin.mx.com.perron.entities.Negocios;
 import admin.mx.com.perron.logic.RealPathUtil;
 import admin.mx.com.perron.utils.ASFUriHelper;
@@ -151,19 +152,19 @@ public class MainActivity extends AbsRuntimePermission implements View.OnClickLi
         edtNombreNegocio = (EditText) findViewById(R.id.edtNombreNegocio);
         edtDireccion = (EditText) findViewById(R.id.edtDireccion);
         edtCoordenadas = (EditText) findViewById(R.id.edtCoordenadas);
-        edtLogotipo = (EditText) findViewById(R.id.edtLogotipo);
-        edtResponse = (EditText) findViewById(R.id.edtResponse);
-        textResult = (TextView) findViewById(R.id.textResult);
-        textResult2 = (TextView) findViewById(R.id.ip);
+//        edtLogotipo = (EditText) findViewById(R.id.edtLogotipo);
+//        edtResponse = (EditText) findViewById(R.id.edtResponse);
+//        textResult = (TextView) findViewById(R.id.textResult);
+//        textResult2 = (TextView) findViewById(R.id.ip);
         btnChooseImage = (Button) findViewById(R.id.btn_choose_image);
         btnChooseImage.setOnClickListener(this);
         imgView = (ImageView) findViewById(R.id.image_ftp);
         WifiManager wm = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
         String ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
-        textIp = (TextView)findViewById(R.id.ip);
-        textIp.setText("IP address new job: "+ip);
-        btnLista = (Button)findViewById(R.id.btn_lista);
-        btnLista.setOnClickListener(this);
+//        textIp = (TextView)findViewById(R.id.ip);
+//        textIp.setText("IP address new job: "+ip);
+//        btnLista = (Button)findViewById(R.id.btn_lista);
+//        btnLista.setOnClickListener(this);
     }
     public void setValues(Negocios negociosImage) {
         //imgView.setImageBitmap(negociosImage.getLogotipo());
@@ -172,7 +173,7 @@ public class MainActivity extends AbsRuntimePermission implements View.OnClickLi
         edtCoordenadas.setText(negociosImage.getCoordenadas());
         //thumbnail = negociosImage.getLogotipo();
         Picasso.with(getApplicationContext())
-                .load(Constants.URL_BASE+negociosImage.getLogotipo())
+                .load(Constants.URL_HOST_IMAGES+negociosImage.getLogotipo())
                 .error(R.drawable.not_available)
                 .into(imgView);
     }
@@ -218,9 +219,9 @@ public class MainActivity extends AbsRuntimePermission implements View.OnClickLi
         Log.d("Update: ", res.toString());
         return res;
     }
-    public void mostrarMesaje(String message) {
-        textResult.setText(message.toString());
-        edtResponse.setText(message.toString());
+    public void mostrarMesaje(MessageError messageError) {
+        Toast.makeText(getApplicationContext(), messageError.getMessage(), Toast.LENGTH_SHORT).show();
+        finish();
     }
 
 
@@ -249,7 +250,6 @@ public class MainActivity extends AbsRuntimePermission implements View.OnClickLi
                     if (thumbnail != null) {
                         FtpCliente ftp = new FtpCliente(getApplicationContext(), this, thumbnail, getJsonObject2(), option, position);
                         ftp.execute();
-//                        finish();
                     } else {
                         nuevoSnack("Please select an image first that all");
                     }
