@@ -152,19 +152,19 @@ public class MainActivity extends AbsRuntimePermission implements View.OnClickLi
         edtNombreNegocio = (EditText) findViewById(R.id.edtNombreNegocio);
         edtDireccion = (EditText) findViewById(R.id.edtDireccion);
         edtCoordenadas = (EditText) findViewById(R.id.edtCoordenadas);
-        edtLogotipo = (EditText) findViewById(R.id.edtLogotipo);
-        edtResponse = (EditText) findViewById(R.id.edtResponse);
-        textResult = (TextView) findViewById(R.id.textResult);
-        textResult2 = (TextView) findViewById(R.id.ip);
+//        edtLogotipo = (EditText) findViewById(R.id.edtLogotipo);
+//        edtResponse = (EditText) findViewById(R.id.edtResponse);
+//        textResult = (TextView) findViewById(R.id.textResult);
+//        textResult2 = (TextView) findViewById(R.id.ip);
         btnChooseImage = (Button) findViewById(R.id.btn_choose_image);
         btnChooseImage.setOnClickListener(this);
         imgView = (ImageView) findViewById(R.id.image_ftp);
         WifiManager wm = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
         String ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
-        textIp = (TextView)findViewById(R.id.ip);
-        textIp.setText("IP address new job: "+ip);
-        btnLista = (Button)findViewById(R.id.btn_lista);
-        btnLista.setOnClickListener(this);
+//        textIp = (TextView)findViewById(R.id.ip);
+//        textIp.setText("IP address new job: "+ip);
+//        btnLista = (Button)findViewById(R.id.btn_lista);
+//        btnLista.setOnClickListener(this);
     }
     public void setValues(Negocios negociosImage) {
         //imgView.setImageBitmap(negociosImage.getLogotipo());

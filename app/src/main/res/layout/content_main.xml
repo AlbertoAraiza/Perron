@@ -70,50 +70,50 @@
             android:background="@drawable/edittextstyle"
             android:text="Coordenadas"/>
         <!--Renglon de imagen logotipo-->
-        <TextView
-            android:id="@+id/textLogotipo"
-            android:text="Logotipo: "
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="30dp"
-            android:layout_below="@+id/edtCoordenadas"/>
-        <EditText
-            android:id="@+id/edtLogotipo"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:layout_below="@+id/textLogotipo"
-            android:background="@drawable/edittextstyle"
-            android:text="Logo"/>
+        <!--<TextView-->
+            <!--android:id="@+id/textLogotipo"-->
+            <!--android:text="Logotipo: "-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textSize="30dp"-->
+            <!--android:layout_below="@+id/edtCoordenadas"/>-->
+        <!--<EditText-->
+            <!--android:id="@+id/edtLogotipo"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_below="@+id/textLogotipo"-->
+            <!--android:background="@drawable/edittextstyle"-->
+            <!--android:text="Logo"/>-->
         <!--Boton para enviar la informacion seleccionada-->
 
-        <TextView
-            android:id="@+id/textResult"
-            android:text="Resultado:"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="30dp"
-            android:layout_below="@+id/edtLogotipo"/>
-        <EditText
-            android:id="@+id/edtResponse"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:layout_below="@+id/textResult"
-            android:background="@drawable/edittextstyle"
-            android:inputType="textMultiLine"
-            android:lines="5"
-            android:text="Logo"/>
-        <TextView
-            android:id="@+id/ip"
-            android:text="Resultado:"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="30dp"
-            android:layout_below="@+id/edtResponse"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/btn_lista"
-            android:text="Lista de negocios"
-            android:layout_below="@+id/ip"/>
+        <!--<TextView-->
+            <!--android:id="@+id/textResult"-->
+            <!--android:text="Resultado:"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textSize="30dp"-->
+            <!--android:layout_below="@+id/edtCoordenadas"/>-->
+        <!--<EditText-->
+            <!--android:id="@+id/edtResponse"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_below="@+id/textResult"-->
+            <!--android:background="@drawable/edittextstyle"-->
+            <!--android:inputType="textMultiLine"-->
+            <!--android:lines="5"-->
+            <!--android:text="Logo"/>-->
+        <!--<TextView-->
+            <!--android:id="@+id/ip"-->
+            <!--android:text="Resultado:"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textSize="30dp"-->
+            <!--android:layout_below="@+id/edtResponse"/>-->
+        <!--<Button-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:id="@+id/btn_lista"-->
+            <!--android:text="Lista de negocios"-->
+            <!--android:layout_below="@+id/ip"/>-->
     </RelativeLayout>
 </ScrollView>
