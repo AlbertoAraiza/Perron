@@ -4,7 +4,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.Toast;
-
 import java.util.List;
 import admin.mx.com.perron.R;
 import admin.mx.com.perron.adapter.NegociosAdapter;
@@ -15,12 +14,7 @@ import admin.mx.com.perron.utils.Utils;
  * Created by Jorge on 07/feb/2016.
  */
 public class ListNegociosActivity extends AdministracionMain{
-
-
-    public ListNegociosActivity() {
-
-    }
-
+    public ListNegociosActivity() {}
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

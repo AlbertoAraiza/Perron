@@ -80,7 +80,6 @@ public class NegociosAdapter extends RecyclerView.Adapter<NegociosAdapter.Negoci
         public TextView vCoordenadas;
         public TextView vIdRecord;
 
-
         public NegocioViewHolder(View v) {
             super(v);
             vLogotipo =  (ImageView) v.findViewById(R.id.logotipo);
@@ -153,12 +152,7 @@ public class NegociosAdapter extends RecyclerView.Adapter<NegociosAdapter.Negoci
                         Negocios negociosImage = (Negocios)MyProperties.getInstance().listaNegocios.get(position);
                         Log.d(Constants.appName, negociosImage.toString());
                         int idNegocio = negociosImage.getIdNegocio().intValue();
-//                        art.setIdArticulo(idNegocio);
-//                        art.setPrecio(123);
-//                        art.setDescripcion("descripcion");
-//                        art.setNombreArticulo("nombre");
                         art.setIdNegocio(idNegocio);
-//                        art.setImageCode("imagen");
                         DaoArticulo daoArticulo = new DaoArticulo( getmContext(), Constants.LISTAR_ARTICULOS, position);
                         daoArticulo.getListaArticulo(art);
                     } catch (Exception e) {

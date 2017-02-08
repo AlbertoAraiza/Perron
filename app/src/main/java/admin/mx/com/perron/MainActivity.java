@@ -255,19 +255,9 @@ public class MainActivity extends AbsRuntimePermission implements View.OnClickLi
                 }
             }else if(option==Constants.ACTUALIZAR){
                 if (validar(v)) {
-                    Negocios nego = createNegocioUpdate();
-                    String message = Utils.convertGson(nego);
-                    //executeRequestJson2(message);
-//                    if (thumbnail == null)
                     FtpCliente ftp = new FtpCliente(getApplicationContext(), this, thumbnail, getJsonObject2(), option, position);
                     ftp.execute();
-
-//                    finish();
-//                    } else {
-//                        nuevoSnack("Please select an image first that all");
-//                    }
                 }
-
             }
         }else if (btnChooseImage == v) {
             chooseImage();

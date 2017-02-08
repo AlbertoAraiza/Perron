@@ -284,7 +284,7 @@ public class DatabaseObject extends AsyncTask {
 
     public void getListaArticulos(JSONArray listaArticulos) {
         JSONArray jsonMainArr = listaArticulos;
-        Log.d(Constants.appName, "listaArticulos : "+listaArticulos);
+        Log.d(Constants.appName, "\"DatabaseObject.getListaArticulos\" listaArticulos : "+listaArticulos);
 //        try {
 //            JSONObject jsonObj = new JSONObject(listaArticulos);
 //            jsonMainArr = jsonObj.getJSONArray("friends");

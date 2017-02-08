@@ -72,7 +72,8 @@ public class ListArticulosActivity extends AdministracionMain implements View.On
         btnAddItem = (Button)findViewById(R.id.btn_add_item);
 
         Picasso.with(imageNegocio.getContext())
-                .load(Constants.URL_BASE+negociosImage.getLogotipo())
+                .load(Constants.URL_HOST_IMAGES+negociosImage.getLogotipo())
+                .error(R.drawable.not_available)
                 .into(imageNegocio);
         idNegocio.setText("ID Negocio: " + negociosImage.getIdNegocio());
         nombreNegocio.setText("Nombre Negocio: " + negociosImage.getNombreNegocio());

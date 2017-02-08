@@ -95,25 +95,16 @@ class FtpCliente extends AsyncTask {
                             MyProperties myProperties = MyProperties.getInstance();
                             String input = null;
                             MessageError messageError = gson.fromJson(response.toString(), MessageError.class);
-                            if(messageError.isResult())
+                            if(messageError.isResult() && op == Constants.CREAR) {
                                 Toast.makeText(ctx, messageError.getMessage(), Toast.LENGTH_SHORT).show();
-                            else
-                                Toast.makeText(ctx, "Error: "+messageError.getMessage(), Toast.LENGTH_SHORT).show();
-//                            messageError.isResult()? Toast.makeText(ctx, "Error: " + messageError.getMessage(),Toast.LENGTH_LONG).show() : Toast.makeText(ctx, "Error: "+messageError.getMessage(), Toast.LENGTH_SHORT).show();
-                            if (op == Constants.ACTUALIZAR) {
-                                try {
-                                    if (bitmap != null) {
-                                        input = response.getString("id");
-                                    } else {
-                                        input = myProperties.listaNegocios.get(position).getLogotipo();
-                                    }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                                Negocios nego = ftpUpload.createNegocioUpdate();
-                                nego.setLogotipo(input);
+                            }else if(messageError.isResult() && op == Constants.ACTUALIZAR) {
+
+                                Negocios nego = gson.fromJson(messageError.getMessage(), Negocios.class);
                                 myProperties.listaNegocios.set(position, nego);
                                 myProperties.listNego.getAdapter().notifyDataSetChanged();
+                                Toast.makeText(ctx, "Actualizado el negocio", Toast.LENGTH_SHORT).show();
+                            }else if(messageError.isResult()==false){
+                                Toast.makeText(ctx, "Error: " + messageError.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         }catch(Exception e){
                             try {
@@ -129,10 +120,8 @@ class FtpCliente extends AsyncTask {
 
                 @Override
                 public void onErrorResponse(VolleyError error) {
-
-                System.out.println("ERROR ON onErrorResponse: "+Utils.getStackTrace(error));
-                    MessageError messageError = new MessageError("Error volley: "+
-                            error.getMessage(), false);
+                    System.out.println("ERROR ON onErrorResponse: "+Utils.getStackTrace(error));
+                    MessageError messageError = new MessageError("Error volley: "+error.getMessage(), false);
                     ftpUpload.mostrarMesaje(messageError);
             }
         });
